@@ -2,6 +2,7 @@ package com.kemsu.sibiryakov.api.Entities.UserPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
+import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "organizers")
-public class Organizer {
+public class Organizer implements IUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

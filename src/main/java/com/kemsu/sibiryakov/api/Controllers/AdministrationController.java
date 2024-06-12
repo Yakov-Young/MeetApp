@@ -22,7 +22,7 @@ public class AdministrationController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Administration> getById(@PathVariable Long id) {
+    public Administration getById(@PathVariable Long id) {
         return administrationService.getById(id);
     }
 

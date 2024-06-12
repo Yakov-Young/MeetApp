@@ -29,6 +29,21 @@ public class AccessService {
         return accessRepository.findByLogin(login).orElse(null);
     }
 
+    public Access checkAccess(AccessDTO accessDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Access access = this.getByLogin(accessDTO.getLogin());
+
+        boolean isMatch = access.getPassword().equals(
+                this.encode(
+                        accessDTO.getPassword(),
+                        access.getSalt()
+                ));
+
+        if (access != null && isMatch) {
+            return access;
+        }
+        return null;
+    }
+
     public Access createAccess(AccessDTO accessDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String salt = this.generateSalt();
         Access access = new Access(accessDTO.getLogin(), this.encode(accessDTO.getPassword(), salt),

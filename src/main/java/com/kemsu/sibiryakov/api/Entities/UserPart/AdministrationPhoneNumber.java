@@ -2,8 +2,10 @@ package com.kemsu.sibiryakov.api.Entities.UserPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "administrations_phones")
 public class AdministrationPhoneNumber {
     @Id
@@ -17,18 +19,8 @@ public class AdministrationPhoneNumber {
     @JsonIgnore
     private Administration administration;
 
-    public AdministrationPhoneNumber() {
-    }
-
-    public AdministrationPhoneNumber(String phone) {
+    public AdministrationPhoneNumber(String phone, Administration administration) {
         this.phone = phone;
-    }
-
-    public Administration getAdministration_id() {
-        return administration;
-    }
-
-    public void setAdministration_id(Administration administration_id) {
         this.administration = administration;
     }
 

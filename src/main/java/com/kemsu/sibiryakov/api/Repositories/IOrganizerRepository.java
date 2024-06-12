@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Repositories;
 
+import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import java.util.Optional;
 public interface IOrganizerRepository extends JpaRepository<Organizer, Long> {
     @NotNull
     Optional<Organizer> findById(@NotNull Long id);
+
+    Optional<Organizer> getByAccess(Access access);
 }

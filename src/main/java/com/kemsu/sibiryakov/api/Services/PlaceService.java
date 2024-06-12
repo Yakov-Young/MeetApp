@@ -14,11 +14,14 @@ import java.util.List;
 public class PlaceService {
     private final IPlacesRepository placesRepository;
     private final ICityRepositories cityRepositories;
+    private final CityService cityService;
 
     @Autowired
-    public PlaceService(IPlacesRepository placesRepository, ICityRepositories cityRepositories) {
+    public PlaceService(IPlacesRepository placesRepository, ICityRepositories cityRepositories,
+                        CityService cityService) {
         this.placesRepository = placesRepository;
         this.cityRepositories = cityRepositories;
+        this.cityService = cityService;
     }
     public List<Place> getAll() {
         return placesRepository.findAll();
@@ -28,10 +31,18 @@ public class PlaceService {
     }
     public Place create(PlaceDTO placeDTO) {
         Place place = new Place(
-                cityRepositories.findById(placeDTO.getCity_id()).orElseThrow(EntityNotFoundException::new),
+                cityService.getById(placeDTO.getCity_id()),
                 placeDTO.getStreet(),
                 placeDTO.getNumber(),
                 placeDTO.getApartment());
+        return placesRepository.save(place);
+    }
+    public Place create(Place aPlace) {
+        Place place = new Place(
+                aPlace.getCity(),
+                aPlace.getStreet(),
+                aPlace.getNumber(),
+                aPlace.getApartment());
         return placesRepository.save(place);
     }
 }

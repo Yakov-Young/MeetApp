@@ -2,8 +2,10 @@ package com.kemsu.sibiryakov.api.Entities.UserPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "organizer_phones")
 public class OrganizerPhoneNumber {
     @Id
@@ -16,9 +18,6 @@ public class OrganizerPhoneNumber {
     @JoinColumn(name = "organizer_id", nullable = false)
     @JsonIgnore
     private Organizer organizer;
-
-    public OrganizerPhoneNumber() {
-    }
 
     public OrganizerPhoneNumber(String phone, Organizer organizer) {
         this.phone = phone;

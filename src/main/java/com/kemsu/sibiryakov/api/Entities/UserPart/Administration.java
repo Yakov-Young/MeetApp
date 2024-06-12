@@ -2,15 +2,20 @@ package com.kemsu.sibiryakov.api.Entities.UserPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
+import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
+import com.kemsu.sibiryakov.api.Entities.PlacePart.City;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Setter
+@NoArgsConstructor
 @Table(name = "administrations")
-public class Administration {
+public class Administration implements IUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +29,7 @@ public class Administration {
     private LocalDateTime lastActivity;
     @OneToOne
     @JoinColumn(name = "place_id", nullable = false)
-    private Place place;
+    private City city;
     @OneToOne
     @JoinColumn(name = "access_id", nullable = false)
     @JsonIgnore
@@ -36,89 +41,54 @@ public class Administration {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Administration() {
-    }
-
     public Administration(String name, String avatar, String description,
-                          Place place, Access access, OrganizerPhoneNumber phone) {
+                          City city, Access access, OrganizerPhoneNumber phone) {
         this.name = name;
         this.avatar = avatar;
         this.description = description;
-        this.place = place;
+        this.city = city;
         this.access = access;
         this.createdAt = LocalDateTime.now();
         this.lastActivity = LocalDateTime.now();
     }
 
-    public List<AdministrationPhoneNumber> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<AdministrationPhoneNumber> phones) {
-        this.phones = phones;
+    public Administration(String name) {
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public LocalDateTime getLastActivity() {
         return lastActivity;
     }
 
-    public void setLastActivity(LocalDateTime lastActivity) {
-        this.lastActivity = lastActivity;
-    }
-
-    public Place getPlace() {
-        return place;
-    }
-
-    public void setPlace(Place place) {
-        this.place = place;
+    public City getCity() {
+        return city;
     }
 
     public Access getAccess() {
         return access;
     }
 
-    public void setAccess(Access access) {
-        this.access = access;
+    public List<AdministrationPhoneNumber> getPhones() {
+        return phones;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

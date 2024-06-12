@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.Category;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
+import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.City;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements IUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

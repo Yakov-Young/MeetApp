@@ -18,9 +18,9 @@ import java.util.List;
 @Service
 public class UserService {
     private final IUsersRepository usersRepository;
-    private final AccessService accessService;
     private final UserOrganizerStatusService userOrganizerStatusService;
     private final RoleService roleService;
+    private final AccessService accessService;
     private final CityService cityService;
 
     @Autowired
@@ -40,6 +40,10 @@ public class UserService {
 
     public User getById(Long id) {
         return usersRepository.findById(id).orElse(null);
+    }
+
+    public User getByAccess(Access access) {
+        return usersRepository.findByAccess(access).orElse(null);
     }
 
 //    public User createVisitor(UserRegisterDTO userRegisterDTO) {
@@ -95,7 +99,7 @@ public class UserService {
                 )
         ));
         user.setStatus(userOrganizerStatusService.createStatus(
-                new UserOrganizerStatus().setDefault()
+                user.getStatus()
         ));
         user.setCity(cityService.getById(6L)); // Kemerovo city
         user.setRole(roleService.getByID(1L)); // User role
@@ -103,7 +107,29 @@ public class UserService {
         return usersRepository.save(user);
     }
 
-    public User convertToUser(UserRegisterDTO userRegisterDTO) {
+    public User createModerator(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
+
+        if (existingUser != null) {
+            return null;
+        }
+
+        user.setAccess(accessService.createAccess(
+                new AccessDTO(
+                        user.getAccess().getLogin(),
+                        user.getAccess().getPassword()
+                )
+        ));
+        user.setStatus(userOrganizerStatusService.createStatus(
+                user.getStatus()
+        ));
+        user.setCity(cityService.getById(6L)); // Kemerovo city
+        user.setRole(roleService.getByID(2L)); // Moderator role
+
+        return usersRepository.save(user);
+    }
+
+    public User prepareToRegisterUser(UserRegisterDTO userRegisterDTO) {
         if (userRegisterDTO.getPassword().equals(userRegisterDTO.getCheckPassword())) {
             User user = new User(userRegisterDTO.getName(), userRegisterDTO.getSurname(),
                     userRegisterDTO.getPatronymic(), userRegisterDTO.getBirthday());

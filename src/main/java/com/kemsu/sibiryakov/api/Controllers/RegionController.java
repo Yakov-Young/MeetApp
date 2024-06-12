@@ -25,11 +25,13 @@ public class RegionController {
     }
 
     @PostMapping("/add")
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
     public Region addOne(@RequestBody RegionAddOneDTO regionAddOneDTO) {
         return regionService.crateOneRegion(regionAddOneDTO);
     }
 
     @PostMapping("/addMany")
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
     public List<Region> addMany(@RequestBody RegionAddManyDTO regionAddManyDTO) {
         return regionService.createManyRegion(regionAddManyDTO);
     }
