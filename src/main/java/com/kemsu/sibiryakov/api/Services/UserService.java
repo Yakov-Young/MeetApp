@@ -1,0 +1,125 @@
+package com.kemsu.sibiryakov.api.Services;
+
+import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
+import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.UserRegisterDTO;
+import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
+import com.kemsu.sibiryakov.api.Entities.UserPart.UserOrganizerStatus;
+import com.kemsu.sibiryakov.api.Repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+public class UserService {
+    private final IUsersRepository usersRepository;
+    private final AccessService accessService;
+    private final UserOrganizerStatusService userOrganizerStatusService;
+    private final RoleService roleService;
+    private final CityService cityService;
+
+    @Autowired
+    public UserService(IUsersRepository usersRepository, AccessService accessService,
+                       UserOrganizerStatusService userOrganizerStatusService,
+                       RoleService roleService, CityService cityService) {
+        this.usersRepository = usersRepository;
+        this.accessService = accessService;
+        this.userOrganizerStatusService = userOrganizerStatusService;
+        this.roleService = roleService;
+        this.cityService = cityService;
+    }
+
+    public List<User> getAll() {
+        return usersRepository.findAll();
+    }
+
+    public User getById(Long id) {
+        return usersRepository.findById(id).orElse(null);
+    }
+
+//    public User createVisitor(UserRegisterDTO userRegisterDTO) {
+//
+//        Access existingUser = accessRepository.findByLogin(userRegisterDTO.getEmail()).orElse(null);
+//
+//        if (existingUser != null) {
+//            return null;
+//        }
+//
+//        User user = new User(userRegisterDTO.getName(), userRegisterDTO.getSurname(),
+//                userRegisterDTO.getPatronymic(), userRegisterDTO.getBirthday());
+//
+//        if (userRegisterDTO.getPassword().equals(userRegisterDTO.getCheckPassword())) {
+//            Access access = new Access(userRegisterDTO.getEmail(),
+//                    userRegisterDTO.getPassword(), "123456");
+//            access = accessRepository.save(access);
+//            user.setAccess(access);
+//        } else {
+//            return null;
+//        }
+//
+//        UserOrganizerStatus status = new UserOrganizerStatus().setDefault();
+//        status = userOrganizerStatusesRepository.save(status);
+//        user.setStatus(status);
+//
+//        Role role = roleRepository.findById(1L).orElseThrow(EntityNotFoundException::new); // Select User role
+//        user.setRole(role);
+//
+//        City city = cityRepositories.findById(6L).orElseThrow(EntityNotFoundException::new); // Select Kemerovo
+//        user.setCity(city);
+//
+//        user.setGender(Gender.UNDEFINED);
+//
+//        LocalDateTime editTime = LocalDateTime.now();
+//        user.setCreatedAt(editTime);
+//        user.setLastActivity(editTime);
+//
+//        return usersRepository.save(user);
+//    }
+
+    public User createVisitor(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
+
+        if (existingUser != null) {
+            return null;
+        }
+
+        user.setAccess(accessService.createAccess(
+                new AccessDTO(
+                        user.getAccess().getLogin(),
+                        user.getAccess().getPassword()
+                )
+        ));
+        user.setStatus(userOrganizerStatusService.createStatus(
+                new UserOrganizerStatus().setDefault()
+        ));
+        user.setCity(cityService.getById(6L)); // Kemerovo city
+        user.setRole(roleService.getByID(1L)); // User role
+
+        return usersRepository.save(user);
+    }
+
+    public User convertToUser(UserRegisterDTO userRegisterDTO) {
+        if (userRegisterDTO.getPassword().equals(userRegisterDTO.getCheckPassword())) {
+            User user = new User(userRegisterDTO.getName(), userRegisterDTO.getSurname(),
+                    userRegisterDTO.getPatronymic(), userRegisterDTO.getBirthday());
+
+            user.setGender(Gender.UNDEFINED);
+            user.setStatus(new UserOrganizerStatus().setDefault());
+
+            LocalDateTime editTime = LocalDateTime.now();
+            user.setCreatedAt(editTime);
+            user.setLastActivity(editTime);
+
+            user.setAccess(new Access(userRegisterDTO.getEmail(), userRegisterDTO.getPassword()));
+
+            return user;
+        }
+
+        return null;
+    }
+}
