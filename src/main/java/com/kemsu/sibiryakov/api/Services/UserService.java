@@ -108,7 +108,6 @@ public class UserService {
     }
 
     public User createModerator(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        try {
             Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
 
             if (existingUser != null) {
@@ -128,7 +127,6 @@ public class UserService {
             user.setRole(roleService.getByID(2L)); // Moderator role
 
             return usersRepository.save(user);
-        }
     }
 
     public User prepareToRegisterUser(UserRegisterDTO userRegisterDTO) {
