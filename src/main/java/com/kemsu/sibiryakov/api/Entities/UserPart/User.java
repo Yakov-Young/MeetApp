@@ -65,7 +65,7 @@ public class User implements IUser {
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_category",
             joinColumns = @JoinColumn(name = "user_id"),

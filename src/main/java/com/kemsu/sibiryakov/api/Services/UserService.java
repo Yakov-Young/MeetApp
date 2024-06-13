@@ -46,6 +46,10 @@ public class UserService {
         return usersRepository.findByAccess(access).orElse(null);
     }
 
+    public User save(User user) {
+        return usersRepository.save(user);
+    }
+
 //    public User createVisitor(UserRegisterDTO userRegisterDTO) {
 //
 //        Access existingUser = accessRepository.findByLogin(userRegisterDTO.getEmail()).orElse(null);
