@@ -4,10 +4,10 @@ import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Services.OrganizerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,12 +21,17 @@ public class OrganizerController {
     }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     public List<Organizer> getAll() {
         return organizerService.getAllOrganizer();
     }
 
     @GetMapping("/{id}")
-    public Organizer getById(@PathVariable Long id) {
-        return organizerService.getById(id);
+    public ResponseEntity<Organizer> getById(@PathVariable Long id) {
+        Organizer organizer = organizerService.getById(id);
+
+        return organizer != null
+                ? new ResponseEntity<>(organizer, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 }

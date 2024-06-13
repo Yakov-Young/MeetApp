@@ -6,6 +6,8 @@ import com.kemsu.sibiryakov.api.Entities.PlacePart.Region;
 import com.kemsu.sibiryakov.api.Services.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,20 +22,27 @@ public class RegionController {
     }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     public List<Region> getAll() {
         return regionService.getAll();
     }
 
     @PostMapping("/add")
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
-    public Region addOne(@RequestBody RegionAddOneDTO regionAddOneDTO) {
-        return regionService.crateOneRegion(regionAddOneDTO);
+    public ResponseEntity<Region> addOne(@RequestBody RegionAddOneDTO regionAddOneDTO) {
+        Region region = regionService.crateOneRegion(regionAddOneDTO);
+
+        return region != null
+                ? new ResponseEntity<>(region, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/addMany")
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
-    public List<Region> addMany(@RequestBody RegionAddManyDTO regionAddManyDTO) {
-        return regionService.createManyRegion(regionAddManyDTO);
+    public ResponseEntity<List<Region>> addMany(@RequestBody RegionAddManyDTO regionAddManyDTO) {
+        List<Region> regions = regionService.createManyRegion(regionAddManyDTO);
+
+        return regions != null
+                ? new ResponseEntity<>(regions, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @DeleteMapping("/delete/{id}")

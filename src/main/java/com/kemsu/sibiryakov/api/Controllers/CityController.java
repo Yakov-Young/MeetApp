@@ -7,6 +7,8 @@ import com.kemsu.sibiryakov.api.Services.CityService;
 import com.kemsu.sibiryakov.api.Services.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +26,27 @@ public class CityController {
     }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     public List<City> getAll() {
         return cityService.getAll();
     }
 
     @PostMapping("/add")
-    public City addOne(@RequestBody CityAddOneDTO cityAddOneDTO) {
-        return cityService.createOneCity(cityAddOneDTO);
+    public ResponseEntity<City> addOne(@RequestBody CityAddOneDTO cityAddOneDTO) {
+        City city = cityService.createOneCity(cityAddOneDTO);
+
+        return city != null
+                ? new ResponseEntity<>(city, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/addMany")
-    public List<City> addMany(@RequestBody CityAddManyDTO cityAddManyDTO) {
-        return cityService.createManyCity(cityAddManyDTO);
+    public ResponseEntity<List<City>> addMany(@RequestBody CityAddManyDTO cityAddManyDTO) {
+        List<City> cities = cityService.createManyCity(cityAddManyDTO);
+
+        return cities != null
+                ? new ResponseEntity<>(cities, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @DeleteMapping("/delete/{id}")

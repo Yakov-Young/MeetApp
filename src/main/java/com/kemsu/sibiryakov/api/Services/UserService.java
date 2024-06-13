@@ -108,25 +108,27 @@ public class UserService {
     }
 
     public User createModerator(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
+        try {
+            Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
 
-        if (existingUser != null) {
-            return null;
+            if (existingUser != null) {
+                return null;
+            }
+
+            user.setAccess(accessService.createAccess(
+                    new AccessDTO(
+                            user.getAccess().getLogin(),
+                            user.getAccess().getPassword()
+                    )
+            ));
+            user.setStatus(userOrganizerStatusService.createStatus(
+                    user.getStatus()
+            ));
+            user.setCity(cityService.getById(6L)); // Kemerovo city
+            user.setRole(roleService.getByID(2L)); // Moderator role
+
+            return usersRepository.save(user);
         }
-
-        user.setAccess(accessService.createAccess(
-                new AccessDTO(
-                        user.getAccess().getLogin(),
-                        user.getAccess().getPassword()
-                )
-        ));
-        user.setStatus(userOrganizerStatusService.createStatus(
-                user.getStatus()
-        ));
-        user.setCity(cityService.getById(6L)); // Kemerovo city
-        user.setRole(roleService.getByID(2L)); // Moderator role
-
-        return usersRepository.save(user);
     }
 
     public User prepareToRegisterUser(UserRegisterDTO userRegisterDTO) {
