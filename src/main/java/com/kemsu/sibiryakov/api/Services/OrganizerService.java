@@ -2,6 +2,7 @@ package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.OrganizerRegisterDTO;
+import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.OrganizerUpdateDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
 import com.kemsu.sibiryakov.api.Entities.UserPart.*;
@@ -51,50 +52,6 @@ public class OrganizerService {
     public Organizer getByAccess(Access access) {
         return organizerRepository.getByAccess(access).orElse(null);
     }
-//    public Organizer createOrganizer(OrganizerRegisterDTO organizerRegisterDTO) {
-//        Access existingUser = accessRepository.findByLogin(organizerRegisterDTO.getEmail()).orElse(null);
-//
-//        if (existingUser != null) {
-//            return null;
-//        }
-//
-//        Organizer organizer = new Organizer(organizerRegisterDTO.getName(), organizerRegisterDTO.getSurname(),
-//                organizerRegisterDTO.getPatronymic(), organizerRegisterDTO.getCompany(),
-//                organizerRegisterDTO.getBirthday());
-//
-//        if (organizerRegisterDTO.getPassword().equals(organizerRegisterDTO.getCheckPassword())) {
-//            Access access = new Access(organizerRegisterDTO.getEmail(),
-//                    organizerRegisterDTO.getPassword(), "123456");
-//            access = accessRepository.save(access);
-//            organizer.setAccess(access);
-//        } else {
-//            return null;
-//        }
-//
-//        UserOrganizerStatus status = new UserOrganizerStatus().setDefault();
-//        status = organizerStatusesRepository.save(status);
-//        organizer.setStatus(status);
-//
-//        Place place = placeService.create(organizerRegisterDTO.getPlace());
-//        organizer.setPlace(place);
-//
-//        organizer.setGender(Gender.UNDEFINED);
-//
-//        LocalDateTime editTime = LocalDateTime.now();
-//        organizer.setCreatedAt(editTime);
-//        organizer.setLastActivity(editTime);
-//
-//        organizer = organizerRepository.save(organizer);
-//
-//        List<OrganizerPhoneNumber> numbers = new ArrayList<>();
-//
-//        for (String n : organizerRegisterDTO.getPhones()) {
-//            numbers.add(new OrganizerPhoneNumber(n, organizer));
-//        }
-//        organizer.setPhones(organizerPhoneNumberService.createManyPhone(numbers));
-//
-//        return organizer;
-//    }
 
     public Organizer createOrganizer(Organizer organizer) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Access existingUser = accessService.getByLogin(organizer.getAccess().getLogin());
@@ -160,6 +117,28 @@ public class OrganizerService {
             return organizer;
         }
 
+        return null;
+    }
+
+    public Organizer updateProfile(Long id, OrganizerUpdateDTO organizerUpdateDTO) {
+        Organizer organizer = this.getById(id);
+
+        if (organizer != null) {
+            organizer.setDescription(organizerUpdateDTO.getDescription());
+            organizer.setGender(Gender.valueOf(organizerUpdateDTO.getGender().toUpperCase()));
+
+            organizerPhoneNumberService.deleteAll();
+
+            List<OrganizerPhoneNumber> number = new ArrayList<>();
+
+            for (String numb: organizerUpdateDTO.getPhones()) {
+                number.add(new OrganizerPhoneNumber(numb, organizer));
+            }
+
+            organizer.setPhones(number);
+
+            return organizerRepository.save(organizer);
+        }
         return null;
     }
 }

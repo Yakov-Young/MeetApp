@@ -45,31 +45,15 @@ public class OrganizerController {
 
     @PostMapping("/update")
     public ResponseEntity<Organizer> updateOrganizerProfile(@RequestBody OrganizerUpdateDTO organizerUpdateDTO,
-                                            @CookieValue("jwt") String jwt) {
-        Organizer organizer = organizerService.getById(
+                                                            @CookieValue("jwt") String jwt) {
+        Long organizerId =
                 Long.parseLong(
                         JwtFilter.getBody(jwt)
                                 .get("id")
                                 .toString()
-                )
-        );
+                );
 
-        if (organizer != null) {
-            organizer.setDescription(organizerUpdateDTO.getDescription());
-            organizer.setGender(Gender.valueOf(organizerUpdateDTO.getGender().toUpperCase()));
-
-            organizerPhoneNumberService.deleteAll();
-
-            List<OrganizerPhoneNumber> number = new ArrayList<>();
-
-            for (String numb: organizerUpdateDTO.getPhones()) {
-                number.add(new OrganizerPhoneNumber(numb, organizer));
-            }
-
-            organizer.setPhones(number);
-
-            organizer = organizerService.save(organizer);
-        }
+        Organizer organizer = organizerService.updateProfile(organizerId, organizerUpdateDTO);
 
         return organizer != null
                 ? new ResponseEntity<>(organizer,HttpStatusCode.valueOf(200))
