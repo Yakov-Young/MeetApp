@@ -50,45 +50,6 @@ public class UserService {
         return usersRepository.save(user);
     }
 
-//    public User createVisitor(UserRegisterDTO userRegisterDTO) {
-//
-//        Access existingUser = accessRepository.findByLogin(userRegisterDTO.getEmail()).orElse(null);
-//
-//        if (existingUser != null) {
-//            return null;
-//        }
-//
-//        User user = new User(userRegisterDTO.getName(), userRegisterDTO.getSurname(),
-//                userRegisterDTO.getPatronymic(), userRegisterDTO.getBirthday());
-//
-//        if (userRegisterDTO.getPassword().equals(userRegisterDTO.getCheckPassword())) {
-//            Access access = new Access(userRegisterDTO.getEmail(),
-//                    userRegisterDTO.getPassword(), "123456");
-//            access = accessRepository.save(access);
-//            user.setAccess(access);
-//        } else {
-//            return null;
-//        }
-//
-//        UserOrganizerStatus status = new UserOrganizerStatus().setDefault();
-//        status = userOrganizerStatusesRepository.save(status);
-//        user.setStatus(status);
-//
-//        Role role = roleRepository.findById(1L).orElseThrow(EntityNotFoundException::new); // Select User role
-//        user.setRole(role);
-//
-//        City city = cityRepositories.findById(6L).orElseThrow(EntityNotFoundException::new); // Select Kemerovo
-//        user.setCity(city);
-//
-//        user.setGender(Gender.UNDEFINED);
-//
-//        LocalDateTime editTime = LocalDateTime.now();
-//        user.setCreatedAt(editTime);
-//        user.setLastActivity(editTime);
-//
-//        return usersRepository.save(user);
-//    }
-
     public User createVisitor(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
 

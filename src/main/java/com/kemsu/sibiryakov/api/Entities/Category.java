@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Entities;
 
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,8 @@ public class Category {
     private String name;
     @ManyToMany(mappedBy = "categories")
     private Set<User> users;
+    @ManyToMany(mappedBy = "categories")
+    private Set<Meet> meets;
     public Category(String name) {
         this.name = name;
     }

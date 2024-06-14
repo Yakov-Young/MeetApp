@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
 import com.kemsu.sibiryakov.api.Entities.Emuns.EMeetStatus;
+import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,12 @@ public class MeetStatus {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status", nullable = false)
     private EMeetStatus status;
+
+    public MeetStatus setWait() {
+        this.status = EMeetStatus.WAIT;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
 
     public Long getId() {
         return id;
