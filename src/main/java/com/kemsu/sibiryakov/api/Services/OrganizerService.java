@@ -45,7 +45,9 @@ public class OrganizerService {
     public Organizer getById(Long id) {
         return organizerRepository.findById(id).orElse(null);
     }
-
+    public Organizer save(Organizer organizer) {
+        return organizerRepository.save(organizer);
+    }
     public Organizer getByAccess(Access access) {
         return organizerRepository.getByAccess(access).orElse(null);
     }
