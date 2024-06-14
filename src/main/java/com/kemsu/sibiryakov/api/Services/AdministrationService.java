@@ -2,9 +2,11 @@ package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.AdministrationRegisterDTO;
+import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.AdministrationUpdateDTO;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
 import com.kemsu.sibiryakov.api.Entities.UserPart.AdministrationPhoneNumber;
+import com.kemsu.sibiryakov.api.Entities.UserPart.OrganizerPhoneNumber;
 import com.kemsu.sibiryakov.api.Repositories.IAdministrationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,10 @@ public class AdministrationService {
         this.accessService = accessService;
         this.cityService = cityService;
         this.administrationPhoneNumberService = administrationPhoneNumberService;
+    }
+
+    public List<Administration> getAll() {
+        return administrationsRepository.findAll();
     }
 
     public Administration getById(Long id) {
@@ -86,6 +92,28 @@ public class AdministrationService {
 
             return administration;
         }
+        return null;
+    }
+
+    public Administration updateProfile(Long id, AdministrationUpdateDTO administrationUpdateDTO) {
+        Administration administration = this.getById(id);
+
+        if (administration != null) {
+            administration.setDescription(administrationUpdateDTO.getDescription());
+
+            administrationPhoneNumberService.deleteAll();
+
+            List<AdministrationPhoneNumber> number = new ArrayList<>();
+
+            for (String numb: administrationUpdateDTO.getPhones()) {
+                number.add(new AdministrationPhoneNumber(numb, administration));
+            }
+
+            administration.setPhones(number);
+
+            return administrationsRepository.save(administration);
+        }
+
         return null;
     }
 }

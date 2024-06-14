@@ -23,6 +23,10 @@ public class AdministrationPhoneNumberService {
         return administrationPhoneNumberRepository.findAll();
     }
 
+    public void deleteAll() {
+        administrationPhoneNumberRepository.deleteAll();
+    }
+
     public List<AdministrationPhoneNumber> createManyPhone(List<AdministrationPhoneNumber> numbers) {
         return administrationPhoneNumberRepository.saveAll(numbers);
     }
