@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BannedMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
@@ -65,6 +66,22 @@ public class MeetController {
                         .toString()
         );
 
-        return new ResponseEntity<>(meetService.approvalMeet(agreeMeetDTO, administrationId), HttpStatusCode.valueOf(200));
+        Meet meet = meetService.approvalMeet(agreeMeetDTO, administrationId);
+
+        return new ResponseEntity<>(meet, HttpStatusCode.valueOf(200));
+    }
+
+    @PostMapping("/banned")
+    public ResponseEntity<Meet> banMeet(@RequestBody BannedMeetDTO bannedMeetDTO,
+                                        @CookieValue("jwt") String jwt) {
+        Long administrationId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
+
+        Meet meet = meetService.banMeet(bannedMeetDTO, administrationId);
+
+        return new ResponseEntity<>(meet,HttpStatusCode.valueOf(200));
     }
 }

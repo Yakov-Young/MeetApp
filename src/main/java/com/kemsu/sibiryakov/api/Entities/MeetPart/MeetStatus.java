@@ -44,6 +44,12 @@ public class MeetStatus {
         return this;
     }
 
+    public MeetStatus setBanned() {
+        this.status = EMeetStatus.BANNED;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
+
     public Long getId() {
         return id;
     }
