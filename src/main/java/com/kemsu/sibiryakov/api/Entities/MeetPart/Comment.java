@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "comments")
@@ -44,5 +43,33 @@ public class Comment {
     public Comment(String content, Short grade) {
         this.content = content;
         this.grade = grade;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public Short getGrade() {
+        return grade;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getStatus() {
+        return status.getStatus();
+    }
+
+    public Meet getMeet() {
+        return meet;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

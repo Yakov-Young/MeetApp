@@ -1,8 +1,7 @@
-package com.kemsu.sibiryakov.api.Controllers.Exception;
+package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,9 @@ public class CommentController {
 
         Comment comment = commentService.createComment(createCommentDTO, userId);
 
-        return new ResponseEntity<>(comment, HttpStatusCode.valueOf(201));
+        return comment != null
+                ? new ResponseEntity<>(comment, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
 }

@@ -25,8 +25,8 @@ public class Question {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "meet_id", nullable = false)
     @JsonIgnore
+    @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
     @OneToOne
@@ -35,6 +35,10 @@ public class Question {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Question(String content) {
+        this.content = content;
+    }
 
     public Long getId() {
         return id;
@@ -46,14 +50,6 @@ public class Question {
 
     public User getUser() {
         return user;
-    }
-
-    public Meet getMeet() {
-        return meet;
-    }
-
-    public Meet getMeetId() {
-        return meet;
     }
 
     public String getStatus() {

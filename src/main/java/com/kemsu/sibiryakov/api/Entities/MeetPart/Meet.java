@@ -28,7 +28,7 @@ public class Meet {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIncludeProperties(value = {"id", "name"})
+    @JsonIncludeProperties(value = {"id", "name", "surname"})
     private Organizer owner;
 
     @Column(name = "date_start", nullable = false)

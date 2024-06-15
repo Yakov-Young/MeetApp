@@ -1,2 +1,17 @@
-package com.kemsu.sibiryakov.api.DTOs;public class CreateQuestionDTO {
+package com.kemsu.sibiryakov.api.DTOs;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CreateQuestionDTO {
+    @JsonProperty("meetId")
+    @NotEmpty(message = "Meet id should not be empty")
+    Long meetId;
+    @JsonProperty("body")
+    @NotEmpty(message = "Body id should not be empty")
+    String content;
 }
