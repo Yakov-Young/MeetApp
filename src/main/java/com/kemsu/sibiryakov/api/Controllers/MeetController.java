@@ -1,9 +1,9 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
-import com.kemsu.sibiryakov.api.DTOs.CreateMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
-import com.kemsu.sibiryakov.api.Repositories.IMeetRepository;
 import com.kemsu.sibiryakov.api.Services.MeetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,20 +40,31 @@ public class MeetController {
     @PostMapping("/create")
     public ResponseEntity<Meet> createMeet(@RequestBody CreateMeetDTO createMeetDTO,
                                            @CookieValue("jwt") String jwt) {
-        Long organizerId =
-                Long.parseLong(
-                        JwtFilter.getBody(jwt)
-                                .get("id")
-                                .toString()
-                );
+        Long organizerId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
 
         Meet meet = meetService.createMeet(
                 organizerId,
                 meetService.prepareToCreate(createMeetDTO)
         );
-        System.out.println(meet);
+
         return meet != null
                 ? new ResponseEntity<>(meet, HttpStatusCode.valueOf(201))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+    }
+
+    @PostMapping("/agree")
+    public ResponseEntity<Meet> approvalMeet(@RequestBody AgreeMeetDTO agreeMeetDTO,
+                                             @CookieValue("jwt") String jwt) {
+        Long administrationId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
+
+        return new ResponseEntity<>(meetService.approvalMeet(agreeMeetDTO, administrationId), HttpStatusCode.valueOf(200));
     }
 }

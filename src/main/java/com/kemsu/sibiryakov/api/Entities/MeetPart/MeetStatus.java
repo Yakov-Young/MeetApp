@@ -2,6 +2,7 @@ package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
 import com.kemsu.sibiryakov.api.Entities.Emuns.EMeetStatus;
 import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class MeetStatus {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Administration user;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -37,6 +38,11 @@ public class MeetStatus {
         this.createdAt = LocalDateTime.now();
         return this;
     }
+    public MeetStatus setAgreement() {
+        this.status = EMeetStatus.AGREEMENT;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
 
     public Long getId() {
         return id;
@@ -46,7 +52,7 @@ public class MeetStatus {
         return note;
     }
 
-    public User getUser() {
+    public Administration getUser() {
         return user;
     }
 

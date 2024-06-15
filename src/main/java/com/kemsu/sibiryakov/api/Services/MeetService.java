@@ -1,18 +1,16 @@
 package com.kemsu.sibiryakov.api.Services;
 
-import com.kemsu.sibiryakov.api.DTOs.CreateMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.MeetStatus;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
-import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Repositories.IMeetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.List;
 
 @Service
@@ -24,16 +22,20 @@ public class MeetService {
     private final MeetStatusService meetStatusService;
     private final PlaceService placeService;
 
+    private final AdministrationService administrationService;
+
     @Autowired
     public MeetService(IMeetRepository meetRepository, CategoryService categoryService,
                        CityService cityService, OrganizerService organizerService,
-                       MeetStatusService meetStatusService, PlaceService placeService) {
+                       MeetStatusService meetStatusService, PlaceService placeService,
+                       AdministrationService administrationService) {
         this.meetRepository = meetRepository;
         this.categoryService = categoryService;
         this.cityService = cityService;
         this.organizerService = organizerService;
         this.meetStatusService = meetStatusService;
         this.placeService = placeService;
+        this.administrationService = administrationService;
     }
 
     public List<Meet> getAll() {
@@ -107,5 +109,19 @@ public class MeetService {
 
         return meet;
 
+    }
+
+    public Meet approvalMeet(AgreeMeetDTO agreeMeetDTO, Long id) {
+        Meet meet = this.getById(agreeMeetDTO.getId());
+
+        administrationService.getById(id);
+
+        MeetStatus status = meet.getStatus()
+                .setAgreement();
+        status.setUser(administrationService.getById(id));
+
+        meet.setStatus(status);
+
+        return meetRepository.save(meet);
     }
 }

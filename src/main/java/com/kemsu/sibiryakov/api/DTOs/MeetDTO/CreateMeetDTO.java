@@ -1,7 +1,8 @@
-package com.kemsu.sibiryakov.api.DTOs;
+package com.kemsu.sibiryakov.api.DTOs.MeetDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kemsu.sibiryakov.api.DTOs.PlaceDTO;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
