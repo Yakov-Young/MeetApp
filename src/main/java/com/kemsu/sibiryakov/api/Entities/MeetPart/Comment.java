@@ -40,4 +40,9 @@ public class Comment {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Comment(String content, Short grade) {
+        this.content = content;
+        this.grade = grade;
+    }
 }
