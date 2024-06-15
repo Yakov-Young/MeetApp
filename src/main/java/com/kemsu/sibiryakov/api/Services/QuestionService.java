@@ -26,7 +26,7 @@ public class QuestionService {
         this.contentStatusService = contentStatusService;
     }
 
-    @GetMapping("/{id}")
+
     public Question getById(Long id) {
         return questionRepositories.findById(id).orElse(null);
     }

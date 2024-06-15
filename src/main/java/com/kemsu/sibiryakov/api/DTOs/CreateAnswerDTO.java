@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CreateAnswerDTO {
-    @JsonProperty("meetId")
+    @JsonProperty("questionId")
     @NotEmpty(message = "Meet id should not be empty")
-    Long meetId;
+    Long questionId;
     @JsonProperty("body")
     @NotEmpty(message = "Body id should not be empty")
     String content;

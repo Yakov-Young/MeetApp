@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Answer {
 
     @OneToOne
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonIncludeProperties(value = {"id"})
     private Question question;
 
     @OneToOne
@@ -33,6 +35,10 @@ public class Answer {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Answer(String content) {
+        this.content = content;
+    }
 
     public Long getId() {
         return id;
