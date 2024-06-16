@@ -4,6 +4,7 @@ import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.AdministrationRegisterDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.OrganizerRegisterDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.UserRegisterDTO;
+import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
 import com.kemsu.sibiryakov.api.Entities.UserPart.*;
@@ -30,6 +31,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -70,13 +73,15 @@ public class AuthController {
             }
 
             if (user.getClass() == User.class) {
-                if (Objects.equals(((User) user).getStatus().getStatus(), UserStatus.BANNED.getState())) {
+                if (((User) user).getStatus().getStatus().equals(UserStatus.BANNED)
+                        && ((User) user).getStatus().getStatus().equals(UserStatus.DELETED)) {
                     return null;
                 }
 
                 role = ((User) user).getRole().getName();
             } else if (user.getClass() == Organizer.class) {
-                if (Objects.equals(((Organizer) user).getStatus().getStatus(), UserStatus.BANNED.getState())) {
+                if (((Organizer) user).getStatus().getStatus().equals(UserStatus.BANNED)
+                        && ((Organizer) user).getStatus().getStatus().equals(UserStatus.DELETED)) {
                     return null;
                 }
 
@@ -111,36 +116,55 @@ public class AuthController {
     }
 
     @PostMapping("/registerVisitor")
-    public User registerVisitor(@RequestBody UserRegisterDTO userRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return userService.createVisitor(
+    public ResponseEntity<User> registerVisitor(@RequestBody UserRegisterDTO userRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        User user = userService.createVisitor(
                 userService.prepareToRegisterUser(userRegisterDTO)
         );
 
-        //return userService.createVisitor(userRegisterDTO);
-
+        return user != null
+                ? new ResponseEntity<>(user, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/registerOrganizer")
-    public Organizer registerOrganizer(@RequestBody OrganizerRegisterDTO organizerRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return organizerService.createOrganizer(
+    public ResponseEntity<Organizer> registerOrganizer(@RequestBody OrganizerRegisterDTO organizerRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Organizer organizer = organizerService.createOrganizer(
                 organizerService.prepareToRegisterOrganizer(organizerRegisterDTO)
         );
 
-        //return organizerService.createOrganizer(organizerRegisterDTO);
-
+        return organizer != null
+                ? new ResponseEntity<>(organizer, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/registerAdministration")
-    private Administration registerAdministration(@RequestBody AdministrationRegisterDTO administrationRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return administrationService.createAdministration(
-                administrationService.prapareToRegisterAdministration(administrationRegisterDTO)
-        );
+    private ResponseEntity<Administration> registerAdministration(@RequestBody AdministrationRegisterDTO administrationRegisterDTO,
+                                                                  @CookieValue(value = "jwt",required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (checkRight(jwt, ERole.ADMINISTRATOR)) {
+            Administration administration = administrationService.createAdministration(
+                    administrationService.prapareToRegisterAdministration(administrationRegisterDTO)
+            );
+
+            return administration != null
+                    ? new ResponseEntity<>(administration, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
     }
 
     @PostMapping("/registerModerator")
-    private User registerModerator(@RequestBody UserRegisterDTO moderatorRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return userService.createModerator(
-                userService.prepareToRegisterUser(moderatorRegisterDTO)
-        );
+    private ResponseEntity<User> registerModerator(@RequestBody UserRegisterDTO moderatorRegisterDTO,
+                                                   @CookieValue(value = "jwt",required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (checkRight(jwt, ERole.ADMINISTRATOR)) {
+            User moderator = userService.createModerator(
+                    userService.prepareToRegisterUser(moderatorRegisterDTO)
+            );
+        return moderator != null
+                ? new ResponseEntity<>(moderator, HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
     }
 }
