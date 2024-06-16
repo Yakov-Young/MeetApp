@@ -3,7 +3,9 @@ package com.kemsu.sibiryakov.api.Services;
 import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.OrganizerRegisterDTO;
 import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.OrganizerUpdateDTO;
+import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
+import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
 import com.kemsu.sibiryakov.api.Entities.UserPart.*;
 import com.kemsu.sibiryakov.api.Repositories.IAccessRepository;
@@ -140,5 +142,71 @@ public class OrganizerService {
             return organizerRepository.save(organizer);
         }
         return null;
+    }
+
+    public List<Organizer> getBannedOrganizers() {
+        List<Organizer> organizers = this.getAllOrganizer();
+        List<Organizer> bannedOrganizers = new ArrayList<>();
+
+        for (Organizer o: organizers) {
+            if (o.getStatus().getStatus().equals(UserStatus.BANNED)) {
+                bannedOrganizers.add(o);
+            }
+        }
+
+        return bannedOrganizers;
+    }
+
+    public List<Organizer> getActiveOrganizers() {
+        List<Organizer> organizers = this.getAllOrganizer();
+        List<Organizer> activeOrganizers = new ArrayList<>();
+
+        for (Organizer o: organizers) {
+            if (o.getStatus().getStatus().equals(UserStatus.ACTIVE)) {
+                activeOrganizers.add(o);
+            }
+        }
+
+        return activeOrganizers;
+    }
+
+    public List<Organizer> getWarringOrganizers() {
+        List<Organizer> organizers = this.getAllOrganizer();
+        List<Organizer> warringOrganizers = new ArrayList<>();
+
+        for (Organizer o: organizers) {
+            if (o.getStatus().getStatus().equals(UserStatus.WARING)) {
+                warringOrganizers.add(o);
+            }
+        }
+
+        return warringOrganizers;
+    }
+
+    public List<Organizer> getDeletedOrganizers() {
+        List<Organizer> organizers = this.getAllOrganizer();
+        List<Organizer> deletedOrganizers = new ArrayList<>();
+
+        for (Organizer o: organizers) {
+            if (o.getStatus().getStatus().equals(UserStatus.DELETED)) {
+                deletedOrganizers.add(o);
+            }
+        }
+
+        return deletedOrganizers;
+    }
+
+    public Organizer deleteOrganizer(Long organizerId) {
+        Organizer organizer = this.getById(organizerId);
+
+        if (organizer == null) {
+            return null;
+        }
+
+        UserOrganizerStatus status = organizer.getStatus().setDeleted();
+
+        status.setCreatedAt(LocalDateTime.now());
+
+        return organizerRepository.save(organizer);
     }
 }

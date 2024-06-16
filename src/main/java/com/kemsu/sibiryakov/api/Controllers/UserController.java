@@ -61,10 +61,10 @@ public class UserController {
     @GetMapping("/allBanned")
     public ResponseEntity<List<User>> getBannedUser(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
-            List<User> bannedUsers = userService.getBannedVisitors();
+            List<User> bannedVisitors = userService.getBannedVisitors();
 
-            return !bannedUsers.isEmpty()
-                    ? new ResponseEntity<>(bannedUsers, HttpStatusCode.valueOf(200))
+            return !bannedVisitors.isEmpty()
+                    ? new ResponseEntity<>(bannedVisitors, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
@@ -74,10 +74,10 @@ public class UserController {
     @GetMapping("/allActive")
     public ResponseEntity<List<User>> getActiveUser(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
-            List<User> activeUsers = userService.getActiveVisitors();
+            List<User> activeVisitors = userService.getActiveVisitors();
 
-            return !activeUsers.isEmpty()
-                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+            return !activeVisitors.isEmpty()
+                    ? new ResponseEntity<>(activeVisitors, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
@@ -87,10 +87,10 @@ public class UserController {
     @GetMapping("/allWarring")
     public ResponseEntity<List<User>> getWarringUser(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
-            List<User> activeUsers = userService.getWarringVisitors();
+            List<User> warringVisitors = userService.getWarringVisitors();
 
-            return !activeUsers.isEmpty()
-                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+            return !warringVisitors.isEmpty()
+                    ? new ResponseEntity<>(warringVisitors, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
@@ -100,10 +100,10 @@ public class UserController {
     @GetMapping("/allDeleted")
     public ResponseEntity<List<User>> getDeletedUser(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
-            List<User> activeUsers = userService.getDeletedVisitors();
+            List<User> deletedVisitors = userService.getDeletedVisitors();
 
-            return !activeUsers.isEmpty()
-                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+            return !deletedVisitors.isEmpty()
+                    ? new ResponseEntity<>(deletedVisitors, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
