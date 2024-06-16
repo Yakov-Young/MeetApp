@@ -21,28 +21,28 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Place> getAll() {
-        return placeService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Place> getById(@PathVariable Long id) {
-        Place place = placeService.getById(id);
-
-        return place != null
-                ? new ResponseEntity<>(place, HttpStatusCode.valueOf(200))
-                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
-    }
-
-    @PostMapping("/add")
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
-    public ResponseEntity<Place> createOnePlace(@RequestBody PlaceDTO placeDTO) {
-        Place place = placeService.create(placeDTO);
-
-        return place != null
-                ? new ResponseEntity<>(place, HttpStatusCode.valueOf(201))
-                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
-    }
+//    @GetMapping("/all")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<Place> getAll() {
+//        return placeService.getAll();
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Place> getById(@PathVariable Long id) {
+//        Place place = placeService.getById(id);
+//
+//        return place != null
+//                ? new ResponseEntity<>(place, HttpStatusCode.valueOf(200))
+//                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+//    }
+//
+//    @PostMapping("/add")
+//    @ResponseStatus(value = HttpStatus.CREATED, reason = "ok")
+//    public ResponseEntity<Place> createOnePlace(@RequestBody PlaceDTO placeDTO) {
+//        Place place = placeService.create(placeDTO);
+//
+//        return place != null
+//                ? new ResponseEntity<>(place, HttpStatusCode.valueOf(201))
+//                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+//    }
 }

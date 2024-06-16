@@ -32,7 +32,7 @@ public class AdministrationController {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
             List<Administration> administrations = administrationService.getAll();
 
-            return administrations != null
+            return !administrations.isEmpty()
                     ? new ResponseEntity<>(administrations, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {

@@ -34,7 +34,7 @@ public class CityController {
         if (checkRight(jwt, ERole.ADMINISTRATOR)) {
             List<City> cities = cityService.getAll();
 
-            return cities != null
+            return !cities.isEmpty()
                     ? new ResponseEntity<>(cities, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {

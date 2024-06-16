@@ -29,7 +29,7 @@ public class CategoryController {
         if (checkRight(jwt, ERole.ADMINISTRATOR)) {
             List<Category> categories = categoryService.getAllCategory();
 
-            return categories != null
+            return !categories.isEmpty()
                     ? new ResponseEntity<>(categories, HttpStatusCode.valueOf(201))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
