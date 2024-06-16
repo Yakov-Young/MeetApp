@@ -210,4 +210,18 @@ public class UserService {
 
         return moderators;
     }
+
+    public User deleteUser(Long userId) {
+        User user = this.getById(userId);
+
+        if (!user.getRole().getName().equals(ERole.USER.getRole())) {
+            return null;
+        }
+
+        UserOrganizerStatus status = user.getStatus().setDeleted();
+
+        status.setCreatedAt(LocalDateTime.now());
+
+        return user;
+    }
 }

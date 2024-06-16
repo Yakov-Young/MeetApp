@@ -123,6 +123,25 @@ public class UserController {
         }
     }
 
+    @PostMapping("/selfDelete")
+    public ResponseEntity<User> deleteUser(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            User user = userService.deleteUser(userId);
+
+            return user != null
+                    ? new ResponseEntity<>(user, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
     @PostMapping("/update")
     public ResponseEntity<User> updateUserProfile(@RequestBody UserUpdateDTO userUpdateDTO,
                                                   @CookieValue(value = "jwt", required = false) String jwt) {

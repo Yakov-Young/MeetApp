@@ -57,6 +57,11 @@ public class UserOrganizerStatus {
         this.createdAt = LocalDateTime.now();
         return this;
     }
+    public UserOrganizerStatus setDeleted() {
+        this.status = UserStatus.DELETED;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
     @Override
     public String toString() {
         return "UserOrganizerStatuses{" +
