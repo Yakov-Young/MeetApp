@@ -71,7 +71,9 @@ public class CommentController {
 
         Comment comment = commentService.banComment(banDTO, moderId);
 
-        return new ResponseEntity<>(comment, HttpStatusCode.valueOf(200));
+        return comment != null
+                ? new ResponseEntity<>(comment, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/create")

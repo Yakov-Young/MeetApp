@@ -77,9 +77,13 @@ public class CommentService {
 
         ContentStatus status = comment.getStatus().setBanned();
 
-        status.setUser(userService.getById(moderId));
+        User moder = userService.getById(moderId);
+
+        status.setUser(moder);
         status.setNote(banDTO.getContent());
         status.setCreatedAt(LocalDateTime.now());
+
+        userService.setWaringStatus(comment.getUser(), moder);
 
         return commentRepository.save(comment);
     }
