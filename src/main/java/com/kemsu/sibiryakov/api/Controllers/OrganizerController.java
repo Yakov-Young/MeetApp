@@ -30,12 +30,13 @@ public class OrganizerController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<Organizer> getAll() {
+    public List<Organizer> getAll(@CookieValue(value = "jwt", required = false) String jwt) {
         return organizerService.getAllOrganizer();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organizer> getById(@PathVariable Long id) {
+    public ResponseEntity<Organizer> getById(@PathVariable Long id,
+                                             @CookieValue(value = "jwt", required = false) String jwt) {
         Organizer organizer = organizerService.getById(id);
 
         return organizer != null
@@ -45,7 +46,7 @@ public class OrganizerController {
 
     @PostMapping("/update")
     public ResponseEntity<Organizer> updateOrganizerProfile(@RequestBody OrganizerUpdateDTO organizerUpdateDTO,
-                                                            @CookieValue("jwt") String jwt) {
+                                                            @CookieValue(value = "jwt", required = false) String jwt) {
         Long organizerId =
                 Long.parseLong(
                         JwtFilter.getBody(jwt)

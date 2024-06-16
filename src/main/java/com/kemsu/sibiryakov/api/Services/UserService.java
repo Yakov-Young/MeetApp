@@ -222,6 +222,6 @@ public class UserService {
 
         status.setCreatedAt(LocalDateTime.now());
 
-        return user;
+        return usersRepository.save(user);
     }
 }
