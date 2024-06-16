@@ -1,7 +1,9 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
+import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.QuestionService;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,8 +38,15 @@ public class QuestionController {
     public ResponseEntity<List<Question>> getByMeet(@PathVariable("id") Long meetId,
                                                     @CookieValue("jwt") String jwt) {
         List<Question> questions = questionService.getByMeet(meetId);
+        List<Question> activeQuestion = new ArrayList<>();
 
-        return !questions.isEmpty()
+        for (Question q : questions) {
+            if (q.getStatus().equals(EContentStatus.ACTIVE.getState())) {
+                activeQuestion.add(q);
+            }
+        }
+
+        return !activeQuestion.isEmpty()
                 ? new ResponseEntity<>(questions, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }

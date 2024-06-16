@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Comment {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar"})
     private User user;
 
     @OneToOne

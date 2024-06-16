@@ -1,13 +1,18 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
+import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -25,6 +30,23 @@ public class CommentController {
 
         return comment != null
                 ? new ResponseEntity<>(comment, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @GetMapping("/getByMeet/{id}")
+    public ResponseEntity<List<Comment>> getByMeet(@PathVariable("id") Long meetId,
+                                                   @CookieValue("jwt") String jwt) {
+        List<Comment> comments = commentService.getByMeet(meetId);
+        List<Comment> activeComment = new ArrayList<>();
+
+        for (Comment c : comments) {
+            if (c.getStatus().equals(EContentStatus.ACTIVE.getState())) {
+                activeComment.add(c);
+            }
+        }
+
+        return !activeComment.isEmpty()
+                ? new ResponseEntity<>(comments, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 

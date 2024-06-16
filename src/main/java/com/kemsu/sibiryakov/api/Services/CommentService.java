@@ -3,6 +3,8 @@ package com.kemsu.sibiryakov.api.Services;
 import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Repositories.ICommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,17 @@ public class CommentService {
         );
 
         return commentRepository.save(comment);
+    }
+
+    public List<Comment> getByMeet(Long meetId) {
+        Meet meet = meetService.getById(meetId);
+
+        return commentRepository.findByMeet(meet);
+    }
+
+    public List<Comment> getByUser(Long userID) {
+        User user = userService.getById(userID);
+
+        return commentRepository.findByUser(user);
     }
 }
