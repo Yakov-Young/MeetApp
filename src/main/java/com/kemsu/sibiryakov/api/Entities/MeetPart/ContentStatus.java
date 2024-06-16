@@ -61,7 +61,7 @@ public class ContentStatus {
         return createdAt;
     }
 
-    public String getStatus() {
-        return status.getState();
+    public EContentStatus getStatus() {
+        return status;
     }
 }

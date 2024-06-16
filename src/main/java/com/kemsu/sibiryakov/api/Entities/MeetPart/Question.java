@@ -61,8 +61,8 @@ public class Question {
         return answer;
     }
 
-    public String getStatus() {
-        return status.getStatus();
+    public ContentStatus getStatus() {
+        return status;
     }
 
     public LocalDateTime getCreatedAt() {

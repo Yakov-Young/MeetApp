@@ -34,19 +34,29 @@ public class QuestionController {
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 
-    @GetMapping("/getByMeet/{id}")
-    public ResponseEntity<List<Question>> getByMeet(@PathVariable("id") Long meetId,
+    @GetMapping("/getByMeet/active/{id}")
+    public ResponseEntity<List<Question>> getActiveByMeet(@PathVariable("id") Long meetId,
                                                     @CookieValue("jwt") String jwt) {
         List<Question> questions = questionService.getByMeet(meetId);
         List<Question> activeQuestion = new ArrayList<>();
 
         for (Question q : questions) {
-            if (q.getStatus().equals(EContentStatus.ACTIVE.getState())) {
+            if (q.getStatus().getStatus().equals(EContentStatus.ACTIVE)) {
                 activeQuestion.add(q);
             }
         }
 
         return !activeQuestion.isEmpty()
+                ? new ResponseEntity<>(activeQuestion, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @GetMapping("/getByMeet/all/{id}")
+    public ResponseEntity<List<Question>> getAllByMeet(@PathVariable("id") Long meetId,
+                                                       @CookieValue("jwt") String jwt) {
+        List<Question> questions = questionService.getByMeet(meetId);
+
+        return !questions.isEmpty()
                 ? new ResponseEntity<>(questions, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }

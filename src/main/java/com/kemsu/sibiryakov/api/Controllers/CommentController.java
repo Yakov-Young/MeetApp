@@ -33,19 +33,29 @@ public class CommentController {
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 
-    @GetMapping("/getByMeet/{id}")
-    public ResponseEntity<List<Comment>> getByMeet(@PathVariable("id") Long meetId,
+    @GetMapping("/getByMeet/active/{id}")
+    public ResponseEntity<List<Comment>> getActiveByMeet(@PathVariable("id") Long meetId,
                                                    @CookieValue("jwt") String jwt) {
         List<Comment> comments = commentService.getByMeet(meetId);
         List<Comment> activeComment = new ArrayList<>();
 
         for (Comment c : comments) {
-            if (c.getStatus().equals(EContentStatus.ACTIVE.getState())) {
+            if (c.getStatus().getStatus().equals(EContentStatus.ACTIVE)) {
                 activeComment.add(c);
             }
         }
 
         return !activeComment.isEmpty()
+                ? new ResponseEntity<>(activeComment, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @GetMapping("/getByMeet/all/{id}")
+    public ResponseEntity<List<Comment>> getAllByMeet(@PathVariable("id") Long meetId,
+                                                      @CookieValue("jwt") String jwt) {
+        List<Comment> comments = commentService.getByMeet(meetId);
+
+        return !comments.isEmpty()
                 ? new ResponseEntity<>(comments, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }

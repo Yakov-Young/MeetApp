@@ -57,8 +57,8 @@ public class Answer {
         return question;
     }
 
-    public String getStatus() {
-        return status.getStatus();
+    public ContentStatus getStatus() {
+        return status;
     }
 
     public LocalDateTime getCreatedAt() {
