@@ -75,7 +75,7 @@ public class AnswerController {
                     ? new ResponseEntity<>(answer, HttpStatusCode.valueOf(201))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
-            return new ResponseEntity<>(HttpStatusCode.valueOf(403))
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
     }
 }
