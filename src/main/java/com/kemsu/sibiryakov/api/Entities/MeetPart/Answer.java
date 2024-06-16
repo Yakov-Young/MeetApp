@@ -22,6 +22,7 @@ public class Answer {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar"})
     private User user;
 
     @OneToOne

@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.QuestionService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/question")
@@ -25,6 +28,16 @@ public class QuestionController {
 
         return question != null
                 ? new ResponseEntity<>(question, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @GetMapping("/getByMeet/{id}")
+    public ResponseEntity<List<Question>> getByMeet(@PathVariable("id") Long meetId,
+                                                    @CookieValue("jwt") String jwt) {
+        List<Question> questions = questionService.getByMeet(meetId);
+
+        return !questions.isEmpty()
+                ? new ResponseEntity<>(questions, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 

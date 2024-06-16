@@ -2,6 +2,7 @@ package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.Repositories.IQuestionRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class QuestionService {
@@ -52,5 +54,11 @@ public class QuestionService {
         );
 
         return questionRepositories.save(question);
+    }
+
+    public List<Question> getByMeet(Long meetId) {
+        Meet meet = meetService.getById(meetId);
+
+        return questionRepositories.findByMeet(meet);
     }
 }

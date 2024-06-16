@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,11 @@ public class Question {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar"})
     private User user;
+
+    @OneToOne(mappedBy = "question")
+    private Answer answer;
 
     @ManyToOne
     @JsonIgnore
@@ -50,6 +55,10 @@ public class Question {
 
     public User getUser() {
         return user;
+    }
+
+    public Answer getAnswer() {
+        return answer;
     }
 
     public String getStatus() {
