@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -63,8 +62,8 @@ public class Comment {
         return user;
     }
 
-    public String getStatus() {
-        return status.getStatus();
+    public ContentStatus getStatus() {
+        return status;
     }
 
     public Meet getMeet() {

@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BanDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
@@ -69,5 +70,17 @@ public class CommentService {
         User user = userService.getById(userID);
 
         return commentRepository.findByUser(user);
+    }
+
+    public Comment banComment(BanDTO banDTO, Long moderId) {
+        Comment comment = this.getById(banDTO.getId());
+
+        ContentStatus status = comment.getStatus().setBanned();
+
+        status.setUser(userService.getById(moderId));
+        status.setNote(banDTO.getContent());
+        status.setCreatedAt(LocalDateTime.now());
+
+        return commentRepository.save(comment);
     }
 }

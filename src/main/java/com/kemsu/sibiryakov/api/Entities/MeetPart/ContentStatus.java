@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
@@ -22,6 +23,7 @@ public class ContentStatus {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar", "role"})
     private User user;
 
     @Column(name = "created_at", nullable = false)
@@ -33,6 +35,12 @@ public class ContentStatus {
 
     public ContentStatus setActive() {
         this.status = EContentStatus.ACTIVE;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
+
+    public ContentStatus setBanned() {
+        this.status = EContentStatus.BANNED;
         this.createdAt = LocalDateTime.now();
         return this;
     }

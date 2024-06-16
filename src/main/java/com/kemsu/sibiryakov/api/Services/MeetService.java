@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
-import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BannedMeetDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.MeetStatus;
@@ -124,13 +124,14 @@ public class MeetService {
         return meetRepository.save(meet);
     }
 
-    public Meet banMeet(BannedMeetDTO bannedMeetDTO, Long id) {
-        Meet meet = this.getById(bannedMeetDTO.getId());
+    public Meet banMeet(BanDTO banDTO, Long id) {
+        Meet meet = this.getById(banDTO.getId());
 
         MeetStatus status = meet.getStatus().setBanned();
 
         status.setUser(administrationService.getById(id));
-        status.setNote(bannedMeetDTO.getContent());
+        status.setNote(banDTO.getContent());
+        status.setCreatedAt(LocalDateTime.now());
 
         return meetRepository.save(meet);
     }

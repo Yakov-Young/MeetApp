@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BannedMeetDTO {
+public class BanDTO {
     @JsonProperty("meetId")
     @NotEmpty(message = "Meet id should not empty")
     Long id;
