@@ -115,6 +115,22 @@ public class AuthController {
         return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@CookieValue(value = "jwt",required = false) String jwt,
+                                    HttpServletResponse response) {
+        if (checkRight(jwt)) {
+            Cookie cookie = new Cookie("jwt", "");
+            cookie.setMaxAge(0);
+
+            response.addCookie(cookie);
+
+            return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+
     @PostMapping("/registerVisitor")
     public ResponseEntity<User> registerVisitor(@RequestBody UserRegisterDTO userRegisterDTO) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user = userService.createVisitor(
