@@ -70,7 +70,7 @@ public class CategoryController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Ok")
     public ResponseEntity<?> deleteCategoryById(@PathVariable Long id,
-                                   @CookieValue(value = "jwt", required = false) String jwt) {
+                                                @CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.ADMINISTRATOR)) {
             categoryService.deleteOneCategory(id);
 
