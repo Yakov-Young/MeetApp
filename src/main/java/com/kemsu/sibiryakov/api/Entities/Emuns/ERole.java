@@ -3,7 +3,9 @@ package com.kemsu.sibiryakov.api.Entities.Emuns;
 public enum ERole {
     USER("user"),
     MODERATOR("moderator"),
-    ADMINISTRATOR("administrator");
+    ADMINISTRATOR("administrator"),
+    ORGANIZER("organizer"),
+    ADMINISTRATION("administration");
 
     private final String role;
 
