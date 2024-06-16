@@ -72,7 +72,9 @@ public class QuestionController {
 
         Question question = questionService.banQuestion(banDTO, moderId);
 
-        return new ResponseEntity<>(question, HttpStatusCode.valueOf(200));
+        return question != null
+                ? new ResponseEntity<>(question, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(404));
     }
 
     @PostMapping("/create")

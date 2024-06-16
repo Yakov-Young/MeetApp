@@ -1,7 +1,9 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.CreateAnswerDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
+import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,24 @@ public class AnswerController {
         Answer answer = answerService.getById(id);
 
         return answer != null
-                ? new ResponseEntity<>(answer, HttpStatusCode.valueOf(201))
+                ? new ResponseEntity<>(answer, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @PostMapping("/ban")
+    public ResponseEntity<Answer> banComment(@RequestBody BanDTO banDTO,
+                                             @CookieValue("jwt") String jwt) {
+        Long moderId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
+
+        Answer answer = answerService.banQuestion(banDTO, moderId);
+
+        return answer != null
+                ? new ResponseEntity<>(answer, HttpStatusCode.valueOf(200))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/create")
@@ -37,7 +55,7 @@ public class AnswerController {
                         .toString()
         );
 
-        Answer answer = answerService.createQuestion(createAnswerDTO, userId);
+        Answer answer = answerService.createAnswer(createAnswerDTO, userId);
 
         return answer != null
                 ? new ResponseEntity<>(answer, HttpStatusCode.valueOf(201))

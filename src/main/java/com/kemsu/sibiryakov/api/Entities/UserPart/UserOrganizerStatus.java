@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Entities.UserPart;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class UserOrganizerStatus {
     @Getter
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar"})
     private User user;
 
     public String getStatus() {
@@ -45,6 +47,11 @@ public class UserOrganizerStatus {
 
     public UserOrganizerStatus setDefault() {
         this.status = UserStatus.ACTIVE;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
+    public UserOrganizerStatus setWaring() {
+        this.status = UserStatus.WARING;
         this.createdAt = LocalDateTime.now();
         return this;
     }

@@ -113,4 +113,12 @@ public class UserService {
 
         return null;
     }
+
+    public User setWaringStatus(User user, User moder) {
+        UserOrganizerStatus status = user.getStatus().setWaring();
+        status.setUser(moder);
+        user.setStatus(status);
+
+        return usersRepository.save(user);
+    }
 }

@@ -5,6 +5,7 @@ import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Repositories.IQuestionRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,11 +66,19 @@ public class QuestionService {
     public Question banQuestion(BanDTO banDTO, Long moderId) {
         Question question = this.getById(banDTO.getId());
 
+        if (question == null) {
+            return null;
+        }
+
         ContentStatus status = question.getStatus().setBanned();
 
-        status.setUser(userService.getById(moderId));
+        User moder = userService.getById(moderId);
+
+        status.setUser(moder);
         status.setNote(banDTO.getContent());
         status.setCreatedAt(LocalDateTime.now());
+
+        userService.setWaringStatus(question.getUser(), moder);
 
         return questionRepositories.save(question);
     }

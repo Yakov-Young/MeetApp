@@ -1,10 +1,12 @@
 package com.kemsu.sibiryakov.api.Services;
 
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.CreateAnswerDTO;
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Repositories.IAnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class AnswerService {
         return answerRepository.findById(id).orElse(null);
     }
 
-    public Answer createQuestion(CreateAnswerDTO createAnswerDTO, Long userId) {
+    public Answer createAnswer(CreateAnswerDTO createAnswerDTO, Long userId) {
         Answer answer = new Answer(createAnswerDTO.getContent());
 
         answer.setStatus(
@@ -44,13 +46,39 @@ public class AnswerService {
                 userService.getById(userId)
         );
 
+        Question question = questionService.getById(createAnswerDTO.getQuestionId());
+
+        if (question.getAnswer() != null) {
+            return null;
+        }
+
         answer.setQuestion(
-                questionService.getById(createAnswerDTO.getQuestionId())
+                question
         );
 
         answer.setCreatedAt(
                 LocalDateTime.now()
         );
+
+        return answerRepository.save(answer);
+    }
+
+    public Answer banQuestion(BanDTO banDTO, Long moderId) {
+        Answer answer = this.getById(banDTO.getId());
+
+        if (answer == null) {
+            return null;
+        }
+
+        ContentStatus status = answer.getStatus().setBanned();
+
+        User moder = userService.getById(moderId);
+
+        status.setUser(moder);
+        status.setNote(banDTO.getContent());
+        status.setCreatedAt(LocalDateTime.now());
+
+        userService.setWaringStatus(answer.getUser(), moder);
 
         return answerRepository.save(answer);
     }
