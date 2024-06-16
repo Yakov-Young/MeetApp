@@ -1,6 +1,7 @@
 package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.UserRegisterDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
@@ -118,6 +119,22 @@ public class UserService {
         UserOrganizerStatus status = user.getStatus().setWaring();
         status.setUser(moder);
         user.setStatus(status);
+
+        return usersRepository.save(user);
+    }
+
+    public User banUser(BanDTO banDTO, Long moderId) {
+        User user = this.getById(banDTO.getId());
+
+        if (user == null) {
+            return null;
+        }
+
+        UserOrganizerStatus status = user.getStatus().setBanned();
+
+        status.setUser(this.getById(moderId));
+        status.setNote(banDTO.getContent());
+        status.setCreatedAt(LocalDateTime.now());
 
         return usersRepository.save(user);
     }

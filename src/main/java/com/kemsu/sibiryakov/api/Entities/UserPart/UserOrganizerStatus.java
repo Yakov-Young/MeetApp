@@ -55,7 +55,11 @@ public class UserOrganizerStatus {
         this.createdAt = LocalDateTime.now();
         return this;
     }
-
+    public UserOrganizerStatus setBanned() {
+        this.status = UserStatus.BANNED;
+        this.createdAt = LocalDateTime.now();
+        return this;
+    }
     @Override
     public String toString() {
         return "UserOrganizerStatuses{" +
