@@ -1,5 +1,6 @@
 package com.kemsu.sibiryakov.api.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
@@ -21,8 +22,10 @@ public class Category {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<User> users;
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<Meet> meets;
     public Category(String name) {
         this.name = name;
