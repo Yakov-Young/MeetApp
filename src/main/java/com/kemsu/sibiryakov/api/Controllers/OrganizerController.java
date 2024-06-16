@@ -9,6 +9,8 @@ import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.OrganizerPhoneNumberService;
 import com.kemsu.sibiryakov.api.Services.OrganizerService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -112,7 +114,8 @@ public class OrganizerController {
     }
 
     @PostMapping("/selfDelete")
-    public ResponseEntity<Organizer> deleteUser(@CookieValue(value = "jwt", required = false) String jwt) {
+    public ResponseEntity<Organizer> deleteUser(@CookieValue(value = "jwt", required = false) String jwt,
+                                                HttpServletResponse response) {
         if (checkRight(jwt, ERole.ORGANIZER)) {
             Long organizerId = Long.parseLong(
                     JwtFilter.getBody(jwt)
@@ -121,6 +124,13 @@ public class OrganizerController {
             );
 
             Organizer organizer = organizerService.deleteOrganizer(organizerId);
+
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setMaxAge(0);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/api/");
+
+            response.addCookie(cookie);
 
             return organizer != null
                     ? new ResponseEntity<>(organizer, HttpStatusCode.valueOf(200))

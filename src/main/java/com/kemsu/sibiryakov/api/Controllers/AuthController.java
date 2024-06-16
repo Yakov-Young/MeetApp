@@ -118,9 +118,12 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CookieValue(value = "jwt",required = false) String jwt,
                                     HttpServletResponse response) {
-        if (checkRight(jwt)) {
-            Cookie cookie = new Cookie("jwt", "");
+        if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
+                ERole.ORGANIZER, ERole.ADMINISTRATION)) {
+            Cookie cookie = new Cookie("jwt", null);
             cookie.setMaxAge(0);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/api/");
 
             response.addCookie(cookie);
 

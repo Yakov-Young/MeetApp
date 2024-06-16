@@ -8,6 +8,8 @@ import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.CategoryService;
 import com.kemsu.sibiryakov.api.Services.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -124,7 +126,8 @@ public class UserController {
     }
 
     @PostMapping("/selfDelete")
-    public ResponseEntity<User> deleteUser(@CookieValue(value = "jwt", required = false) String jwt) {
+    public ResponseEntity<User> deleteUser(@CookieValue(value = "jwt", required = false) String jwt,
+                                           HttpServletResponse response) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
                     JwtFilter.getBody(jwt)
@@ -133,6 +136,13 @@ public class UserController {
             );
 
             User user = userService.deleteUser(userId);
+
+            Cookie cookie = new Cookie("jwt", null);
+            cookie.setMaxAge(0);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/api/");
+
+            response.addCookie(cookie);
 
             return user != null
                     ? new ResponseEntity<>(user, HttpStatusCode.valueOf(200))
