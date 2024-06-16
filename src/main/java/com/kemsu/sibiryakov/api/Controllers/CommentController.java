@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
-import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BanDTO;
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;

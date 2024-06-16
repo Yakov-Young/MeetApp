@@ -1,9 +1,8 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
-import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
-import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.QuestionService;
@@ -41,7 +40,8 @@ public class QuestionController {
         List<Question> activeQuestion = new ArrayList<>();
 
         for (Question q : questions) {
-            if (q.getStatus().getStatus().equals(EContentStatus.ACTIVE)) {
+            if (q.getStatus().getStatus().equals(EContentStatus.ACTIVE) &&
+                    (q.getAnswer() == null || q.getAnswer().getStatus().getStatus().equals(EContentStatus.ACTIVE))) {
                 activeQuestion.add(q);
             }
         }
@@ -59,6 +59,20 @@ public class QuestionController {
         return !questions.isEmpty()
                 ? new ResponseEntity<>(questions, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+    }
+
+    @PostMapping("/ban")
+    public ResponseEntity<Question> banComment(@RequestBody BanDTO banDTO,
+                                               @CookieValue("jwt") String jwt) {
+        Long moderId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
+
+        Question question = questionService.banQuestion(banDTO, moderId);
+
+        return new ResponseEntity<>(question, HttpStatusCode.valueOf(200));
     }
 
     @PostMapping("/create")

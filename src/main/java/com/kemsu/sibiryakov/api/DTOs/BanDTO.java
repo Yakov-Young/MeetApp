@@ -1,4 +1,4 @@
-package com.kemsu.sibiryakov.api.DTOs.MeetDTO;
+package com.kemsu.sibiryakov.api.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BanDTO {
-    @JsonProperty("meetId")
+    @JsonProperty("id")
     @NotEmpty(message = "Meet id should not empty")
     Long id;
 

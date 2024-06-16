@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
-import com.kemsu.sibiryakov.api.DTOs.MeetDTO.BanDTO;
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.MeetStatus;

@@ -1,13 +1,13 @@
 package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
+import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.Repositories.IQuestionRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,5 +60,17 @@ public class QuestionService {
         Meet meet = meetService.getById(meetId);
 
         return questionRepositories.findByMeet(meet);
+    }
+
+    public Question banQuestion(BanDTO banDTO, Long moderId) {
+        Question question = this.getById(banDTO.getId());
+
+        ContentStatus status = question.getStatus().setBanned();
+
+        status.setUser(userService.getById(moderId));
+        status.setNote(banDTO.getContent());
+        status.setCreatedAt(LocalDateTime.now());
+
+        return questionRepositories.save(question);
     }
 }
