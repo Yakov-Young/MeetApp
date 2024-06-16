@@ -27,13 +27,10 @@ public class UserOrganizerStatus {
     @JsonIncludeProperties(value = {"id", "name", "surname", "patronymic", "avatar"})
     private User user;
 
-    public String getStatus() {
-        return status.getState();
-    }
-
     @Getter
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Getter
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status", nullable = false)
     private UserStatus status;

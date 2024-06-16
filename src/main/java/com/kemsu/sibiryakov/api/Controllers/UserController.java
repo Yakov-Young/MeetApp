@@ -34,7 +34,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<User>> getAll(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
-            return new ResponseEntity<>(userService.getAll(), HttpStatusCode.valueOf(200));
+            List<User> users = userService.getAll();
+
+            return !users.isEmpty()
+                    ? new ResponseEntity<>(users, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
@@ -48,6 +52,71 @@ public class UserController {
 
             return user != null
                     ? new ResponseEntity<>(user, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/allBanned")
+    public ResponseEntity<List<User>> getBannedUser(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
+            List<User> bannedUsers = userService.getBannedVisitors();
+
+            return !bannedUsers.isEmpty()
+                    ? new ResponseEntity<>(bannedUsers, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/allActive")
+    public ResponseEntity<List<User>> getActiveUser(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
+            List<User> activeUsers = userService.getActiveVisitors();
+
+            return !activeUsers.isEmpty()
+                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/allWarring")
+    public ResponseEntity<List<User>> getWarringUser(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
+            List<User> activeUsers = userService.getWarringVisitors();
+
+            return !activeUsers.isEmpty()
+                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/allDeleted")
+    public ResponseEntity<List<User>> getDeletedUser(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR)) {
+            List<User> activeUsers = userService.getDeletedVisitors();
+
+            return !activeUsers.isEmpty()
+                    ? new ResponseEntity<>(activeUsers, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/all/moderators")
+    public ResponseEntity<List<User>> getModerators(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.ADMINISTRATOR)) {
+            List<User> moderators = userService.getModerators();
+
+            return !moderators.isEmpty()
+                    ? new ResponseEntity<>(moderators, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));

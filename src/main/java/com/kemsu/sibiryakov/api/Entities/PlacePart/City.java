@@ -20,7 +20,6 @@ public class City {
 
     @ManyToOne
     @JoinColumn(name="region_id", nullable=false)
-    @JsonIncludeProperties(value = "name")
     private Region region;
 
     public City(String name, Region region) {
