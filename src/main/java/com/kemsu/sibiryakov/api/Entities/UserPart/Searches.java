@@ -1,10 +1,12 @@
 package com.kemsu.sibiryakov.api.Entities.UserPart;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "searches")
 public class Searches {
     @Id
@@ -18,7 +20,10 @@ public class Searches {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Searches() {
+    public Searches(String search, User user, LocalDateTime createdAt) {
+        this.search = search;
+        this.user = user;
+        this.createdAt = createdAt;
     }
 
     public Searches(String search, User user) {

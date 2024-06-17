@@ -6,18 +6,25 @@ import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetUser;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Searches;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
+import com.kemsu.sibiryakov.api.Repositories.ISearchRepository;
 import com.kemsu.sibiryakov.api.Services.MeetService;
 import com.kemsu.sibiryakov.api.Services.MeetUserService;
+import com.kemsu.sibiryakov.api.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 
@@ -26,11 +33,16 @@ import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 public class MeetController {
     private final MeetService meetService;
     private final MeetUserService meetUserService;
+    private final ISearchRepository searchRepository;
+    private final UserService userService;
 
     @Autowired
-    public MeetController(MeetService meetService, MeetUserService meetUserService) {
+    public MeetController(MeetService meetService, MeetUserService meetUserService,
+                          ISearchRepository searchRepository, UserService userService) {
         this.meetService = meetService;
         this.meetUserService = meetUserService;
+        this.searchRepository = searchRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -71,6 +83,100 @@ public class MeetController {
 
             return !meets.isEmpty()
                     ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Meet>> getMeetByTitle(@RequestParam String title,
+                                                     @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
+                ERole.ORGANIZER, ERole.ADMINISTRATION)) {
+
+            List<Meet> meets = meetService.getAll();
+            List<Meet> result = new ArrayList<>();
+
+            Pattern pattern = Pattern.compile(".*" + title + ".*");
+            Matcher matcher;
+
+            for (Meet m: meets) {
+                matcher = pattern.matcher(m.getTitle());
+                if (matcher.find()) {
+                    result.add(m);
+                }
+            }
+
+            if (ERole.valueOf(JwtFilter.getBody(jwt)
+                            .get("role")
+                            .toString()
+                            .toUpperCase()).equals(ERole.USER)) {
+                Searches search = new Searches(
+                        title,
+                        userService.getById(
+                                Long.parseLong(
+                                JwtFilter.getBody(jwt)
+                                        .get("id")
+                                        .toString()
+                                )),
+                        LocalDateTime.now());
+
+                searchRepository.save(search);
+
+            }
+
+            return !result.isEmpty()
+                    ? new ResponseEntity<>(result, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping(value = "/searchWithCategory")
+    public ResponseEntity<List<Meet>> getMeetByTitleAndCategory(@RequestParam String title,
+                                                                @RequestParam Long category,
+                                                                @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
+                ERole.ORGANIZER, ERole.ADMINISTRATION)) {
+
+            Set<Meet> meets = meetService.getByCategory(category);;
+            List<Meet> result = new ArrayList<>();
+
+            Pattern pattern = Pattern.compile(".*" + title + ".*");
+            Matcher matcher;
+
+            for (Meet m: meets) {
+                matcher = pattern.matcher(m.getTitle());
+                if (matcher.find()) {
+                    result.add(m);
+                }
+            }
+
+
+            if (ERole.valueOf(JwtFilter.getBody(jwt)
+                    .get("role")
+                    .toString()
+                    .toUpperCase()).equals(ERole.USER)) {
+                Searches search = new Searches(
+                        title,
+                        userService.getById(
+                                Long.parseLong(
+                                        JwtFilter.getBody(jwt)
+                                                .get("id")
+                                                .toString()
+                                )),
+                        LocalDateTime.now());
+
+                searchRepository.save(search);
+
+            }
+
+            return !result.isEmpty()
+                    ? new ResponseEntity<>(result, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
 
         } else {
