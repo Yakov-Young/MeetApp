@@ -1,7 +1,9 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.Category;
+import com.kemsu.sibiryakov.api.Entities.MeetUser;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
 import jakarta.persistence.*;
@@ -68,6 +70,10 @@ public class Meet {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "meet")
+    @JsonIgnore
+    private List<MeetUser> meetUser;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

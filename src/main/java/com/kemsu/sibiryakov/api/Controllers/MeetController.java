@@ -5,8 +5,10 @@ import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
+import com.kemsu.sibiryakov.api.Entities.MeetUser;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.MeetService;
+import com.kemsu.sibiryakov.api.Services.MeetUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,10 +23,12 @@ import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 @RequestMapping("/api/meet")
 public class MeetController {
     private final MeetService meetService;
+    private final MeetUserService meetUserService;
 
     @Autowired
-    public MeetController(MeetService meetService) {
+    public MeetController(MeetService meetService, MeetUserService meetUserService) {
         this.meetService = meetService;
+        this.meetUserService = meetUserService;
     }
 
     @GetMapping("/all")
@@ -44,12 +48,52 @@ public class MeetController {
     @GetMapping("/{id}")
     public ResponseEntity<Meet> getMeetById(@PathVariable Long id,
                                             @CookieValue(value = "jwt", required = false) String jwt) {
-        if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
+        if (checkRight(jwt, ERole.MODERATOR, ERole.ADMINISTRATOR,
                 ERole.ORGANIZER, ERole.ADMINISTRATION)) {
             Meet meet = meetService.getById(id);
             return meet != null
                     ? new ResponseEntity<>(meet, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @PostMapping("/view/{id}")
+    public ResponseEntity<Meet> viewMeet(@PathVariable("id") Long meetId,
+                                         @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+        Long userId = Long.parseLong(
+                JwtFilter.getBody(jwt)
+                        .get("id")
+                        .toString()
+        );
+
+        MeetUser meetUser = meetUserService.viewMeet(meetId, userId);
+
+        return meetUser != null
+                ? new ResponseEntity<>(meetUser.getMeet(), HttpStatusCode.valueOf(201))
+                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @PostMapping("/visit/{id}")
+    public ResponseEntity<Meet> visitMeet(@PathVariable("id") Long meetId,
+                                         @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            MeetUser meetUser = meetUserService.visitMeet(meetId, userId);
+
+            return meetUser != null
+                    ? new ResponseEntity<>(meetUser.getMeet(), HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }

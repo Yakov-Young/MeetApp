@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.kemsu.sibiryakov.api.Entities.Category;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
 import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
+import com.kemsu.sibiryakov.api.Entities.MeetUser;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.City;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -76,6 +78,10 @@ public class User implements IUser {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<MeetUser> meetUser;
+
     public User(String name, String surname, String patronymic,
                 Gender gender, String avatar, LocalDateTime birthday,
                 String description, UserOrganizerStatus status,
@@ -109,6 +115,10 @@ public class User implements IUser {
 
     public String getName() {
         return name;
+    }
+
+    public List<MeetUser> getMeetUser() {
+        return meetUser;
     }
 
     public String getSurname() {
