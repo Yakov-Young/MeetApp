@@ -35,7 +35,7 @@ public class MeetController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Meet>> getAllMeet(@CookieValue(value = "jwt", required = false) String jwt) {
-        if (checkRight(jwt, ERole.ADMINISTRATOR)) {
+        if (checkRight(jwt, ERole.ADMINISTRATOR, ERole.ADMINISTRATION)) {
             List<Meet> meets = meetService.getAll();
 
             return !meets.isEmpty()
@@ -60,7 +60,7 @@ public class MeetController {
         }
     }
 
-    @GetMapping("/my")
+    @GetMapping("/user/my")
     public ResponseEntity<List<Meet>> getMyMeet(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
@@ -85,7 +85,7 @@ public class MeetController {
         }
     }
 
-    @GetMapping("/my/last")
+    @GetMapping("/user/my/last")
     public ResponseEntity<List<Meet>> getMyLastMeet(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
@@ -110,7 +110,7 @@ public class MeetController {
         }
     }
 
-    @GetMapping("/my/future")
+    @GetMapping("/user/my/future")
     public ResponseEntity<List<Meet>> getMyFutureMeet(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
@@ -189,6 +189,63 @@ public class MeetController {
 
             return meetUser != null
                     ? new ResponseEntity<>(meetUser.getMeet(), HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/organizer/my")
+    public ResponseEntity<List<Meet>> getMyOrgMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.ORGANIZER)) {
+            Long organizerId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<Meet> meets = meetService.myMeet(organizerId);
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/organizer/my/future")
+    public ResponseEntity<List<Meet>> getMyFutureOrgMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.ORGANIZER)) {
+            Long organizerId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<Meet> futureMeets = meetService.myFutureMeet(organizerId);
+
+            return !futureMeets.isEmpty()
+                    ? new ResponseEntity<>(futureMeets, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/organizer/my/last")
+    public ResponseEntity<List<Meet>> getMyLastOrgMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.ORGANIZER)) {
+            Long organizerId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<Meet> lastMeets = meetService.myLastMeet(organizerId);
+
+            return !lastMeets.isEmpty()
+                    ? new ResponseEntity<>(lastMeets, HttpStatusCode.valueOf(201))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
@@ -285,6 +342,24 @@ public class MeetController {
             );
 
             Meet meet = meetService.banMeet(banDTO, administrationId);
+
+            return new ResponseEntity<>(meet, HttpStatusCode.valueOf(200));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @PostMapping("/canceled")
+    public ResponseEntity<Meet> canceledMeet(@RequestBody BanDTO banDTO,
+                                             @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.ORGANIZER)) {
+            Long administrationId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            Meet meet = meetService.canceledMeet(banDTO);
 
             return new ResponseEntity<>(meet, HttpStatusCode.valueOf(200));
         } else {
