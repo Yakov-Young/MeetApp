@@ -55,6 +55,44 @@ public class MeetController {
         }
     }
 
+    @GetMapping("/futureMeet")
+    public ResponseEntity<List<Meet>> getFutureMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt){
+        if (checkRight(jwt, ERole.ADMINISTRATION)) {
+            Long administrationId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<Meet> meets = meetService.getFutureMeetByPlace(administrationId);
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/lastMeet")
+    public ResponseEntity<List<Meet>> getLastMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt){
+        if (checkRight(jwt, ERole.ADMINISTRATION)) {
+            Long administrationId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<Meet> meets = meetService.getLastMeetByPlace(administrationId);
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Meet> createMeet(@RequestBody CreateMeetDTO createMeetDTO,
                                            @CookieValue(value = "jwt", required = false) String jwt) {
@@ -113,4 +151,6 @@ public class MeetController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
     }
+
+
 }

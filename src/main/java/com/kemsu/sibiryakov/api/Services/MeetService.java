@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -134,5 +135,31 @@ public class MeetService {
         status.setCreatedAt(LocalDateTime.now());
 
         return meetRepository.save(meet);
+    }
+
+    public List<Meet> getFutureMeetByPlace(Long administrationId) {
+        List<Meet> meets = this.getAll();
+        List<Meet> futureMeets = new ArrayList<>();
+
+        for (Meet m: meets) {
+            if (LocalDateTime.now().isBefore(m.getDateStart())) {
+                futureMeets.add(m);
+            }
+        }
+
+        return futureMeets;
+    }
+
+    public List<Meet> getLastMeetByPlace(Long administrationId) {
+        List<Meet> meets = this.getAll();
+        List<Meet> lastMeets = new ArrayList<>();
+
+        for (Meet m: meets) {
+            if (LocalDateTime.now().isAfter(m.getDateStart())) {
+                lastMeets.add(m);
+            }
+        }
+
+        return lastMeets;
     }
 }
