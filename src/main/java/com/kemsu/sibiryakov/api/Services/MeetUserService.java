@@ -64,4 +64,29 @@ public class MeetUserService {
 
         return meetUserRepository.save(meetUser);
     }
+
+    public boolean noVisitMeet(Long meetId, Long userId) {
+        User user = userService.getById(userId);
+        Meet meet = meetService.getById(meetId);
+
+        int counter = 0;
+        for (MeetUser mu: meetUserRepository.findByMeet(meet)) {
+            if (mu.getTypeAction().equals(TypeStatus.VISIT))
+                counter++;
+        }
+
+        if (user == null || meet == null || LocalDateTime.now().isAfter(meet.getDateStart())
+                || counter == meet.getCount())
+            return false;
+
+        List<MeetUser> meetUserList = meetUserRepository.findByUserAndMeet(user, meet);
+
+        for (MeetUser mu: meetUserList) {
+            if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
+                meetUserRepository.delete(mu);
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -79,6 +79,26 @@ public class MeetController {
         }
     }
 
+    @DeleteMapping("/noVisit/{id}")
+    public ResponseEntity<?> noVisitMeet(@PathVariable("id") Long meetId,
+                                            @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            boolean isAccess = meetUserService.noVisitMeet(meetId, userId);
+
+            return isAccess
+                    ? new ResponseEntity<>(HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
     @PostMapping("/visit/{id}")
     public ResponseEntity<Meet> visitMeet(@PathVariable("id") Long meetId,
                                          @CookieValue(value = "jwt", required = false) String jwt) {
