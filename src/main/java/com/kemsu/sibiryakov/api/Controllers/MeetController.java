@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 
@@ -55,6 +56,23 @@ public class MeetController {
             return meet != null
                     ? new ResponseEntity<>(meet, HttpStatusCode.valueOf(200))
                     : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Set<Meet>> getMeetByCategory(@PathVariable Long category,
+                                                       @CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
+                ERole.ORGANIZER, ERole.ADMINISTRATION)) {
+
+            Set<Meet> meets = meetService.getByCategory(category);
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(200))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(404));
+
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }

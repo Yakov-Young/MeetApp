@@ -3,6 +3,7 @@ package com.kemsu.sibiryakov.api.Services;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
+import com.kemsu.sibiryakov.api.Entities.Category;
 import com.kemsu.sibiryakov.api.Entities.Emuns.TypeStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.MeetStatus;
@@ -18,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MeetService {
@@ -219,8 +221,6 @@ public class MeetService {
 
         List<MeetUser> meetUsers = meet.getMeetUser();
 
-        List<User> users = new ArrayList<>();
-
         for (MeetUser m: meetUsers) {
             User user = userService.getById(m.getUser().getId());
             Meet tempMeet = this.getById(banDTO.getId());
@@ -245,5 +245,10 @@ public class MeetService {
         }
 
         return meetRepository.save(meet);
+    }
+
+    public Set<Meet> getByCategory(Long categoryId) {
+        Category category = categoryService.getById(categoryId);
+        return meetRepository.findByCategories(category);
     }
 }
