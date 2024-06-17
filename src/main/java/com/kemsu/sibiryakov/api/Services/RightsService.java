@@ -5,7 +5,7 @@ import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 
 public class RightsService {
 
-    public static boolean checkRight(String jwt, ERole ...role) {
+    public static boolean checkRight(String jwt, ERole... role) {
         if (jwt == null) {
             return false;
         }
@@ -16,7 +16,7 @@ public class RightsService {
                         .toString()
                         .toUpperCase());
 
-        for (ERole r: role) {
+        for (ERole r : role) {
             if (tokenRole == r) {
                 return true;
             }

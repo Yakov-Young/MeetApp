@@ -1,6 +1,5 @@
 package com.kemsu.sibiryakov.api.Repositories;
 
-import com.kemsu.sibiryakov.api.Entities.Emuns.TypeStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetUser;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;

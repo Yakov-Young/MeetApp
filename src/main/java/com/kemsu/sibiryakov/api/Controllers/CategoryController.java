@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
-import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddOneDTO;
 import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddManyDTO;
+import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddOneDTO;
 import com.kemsu.sibiryakov.api.Entities.Category;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Services.CategoryService;
@@ -19,6 +19,7 @@ import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 @RequestMapping("/api/category")
 public class CategoryController {
     private final CategoryService categoryService;
+
     @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserOrganizerStatusService {
     private final IUserOrganizerStatusesRepository userOrganizerStatusesRepository;
+
     @Autowired
     public UserOrganizerStatusService(IUserOrganizerStatusesRepository userOrganizerStatusesRepository) {
         this.userOrganizerStatusesRepository = userOrganizerStatusesRepository;

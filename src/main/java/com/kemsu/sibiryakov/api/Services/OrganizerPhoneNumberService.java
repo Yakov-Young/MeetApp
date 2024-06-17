@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 public class OrganizerPhoneNumberService {
     private final IOrganizerPhoneNumberRepository organizerPhoneNumberRepository;
+
     @Autowired
     public OrganizerPhoneNumberService(IOrganizerPhoneNumberRepository organizerPhoneNumberRepository) {
         this.organizerPhoneNumberRepository = organizerPhoneNumberRepository;
@@ -39,7 +40,7 @@ public class OrganizerPhoneNumberService {
 
     public List<OrganizerPhoneNumber> getByManyId(List<Long> ids) {
         List<OrganizerPhoneNumber> numbers = new ArrayList<>();
-        for (Long id: ids) {
+        for (Long id : ids) {
             numbers.add(this.getById(id));
         }
 

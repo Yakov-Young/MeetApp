@@ -72,6 +72,7 @@ public class Organizer implements IUser {
 
     @OneToMany(mappedBy = "owner")
     private List<Meet> meets;
+
     public Organizer(String name, String surname, String patronymic,
                      Gender gender, String company, String avatar,
                      LocalDateTime birthday, String description, UserOrganizerStatus status,

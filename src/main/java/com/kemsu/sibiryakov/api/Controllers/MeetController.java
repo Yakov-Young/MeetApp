@@ -1,13 +1,12 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
-import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.BanDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Meet;
 import com.kemsu.sibiryakov.api.Entities.MeetUser;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Searches;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Repositories.ISearchRepository;
 import com.kemsu.sibiryakov.api.Services.MeetService;
@@ -102,7 +101,7 @@ public class MeetController {
             Pattern pattern = Pattern.compile(".*" + title + ".*");
             Matcher matcher;
 
-            for (Meet m: meets) {
+            for (Meet m : meets) {
                 matcher = pattern.matcher(m.getTitle());
                 if (matcher.find()) {
                     result.add(m);
@@ -110,16 +109,16 @@ public class MeetController {
             }
 
             if (ERole.valueOf(JwtFilter.getBody(jwt)
-                            .get("role")
-                            .toString()
-                            .toUpperCase()).equals(ERole.USER)) {
+                    .get("role")
+                    .toString()
+                    .toUpperCase()).equals(ERole.USER)) {
                 Searches search = new Searches(
                         title,
                         userService.getById(
                                 Long.parseLong(
-                                JwtFilter.getBody(jwt)
-                                        .get("id")
-                                        .toString()
+                                        JwtFilter.getBody(jwt)
+                                                .get("id")
+                                                .toString()
                                 )),
                         LocalDateTime.now());
 
@@ -143,13 +142,14 @@ public class MeetController {
         if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
                 ERole.ORGANIZER, ERole.ADMINISTRATION)) {
 
-            Set<Meet> meets = meetService.getByCategory(category);;
+            Set<Meet> meets = meetService.getByCategory(category);
+            ;
             List<Meet> result = new ArrayList<>();
 
             Pattern pattern = Pattern.compile(".*" + title + ".*");
             Matcher matcher;
 
-            for (Meet m: meets) {
+            for (Meet m : meets) {
                 matcher = pattern.matcher(m.getTitle());
                 if (matcher.find()) {
                     result.add(m);
@@ -197,7 +197,7 @@ public class MeetController {
 
             List<Meet> meets = new ArrayList<>();
 
-            for (MeetUser m: meetUser) {
+            for (MeetUser m : meetUser) {
                 meets.add(m.getMeet());
             }
 
@@ -222,7 +222,7 @@ public class MeetController {
 
             List<Meet> meets = new ArrayList<>();
 
-            for (MeetUser m: meetUser) {
+            for (MeetUser m : meetUser) {
                 meets.add(m.getMeet());
             }
 
@@ -247,7 +247,7 @@ public class MeetController {
 
             List<Meet> meets = new ArrayList<>();
 
-            for (MeetUser m: meetUser) {
+            for (MeetUser m : meetUser) {
                 meets.add(m.getMeet());
             }
 
@@ -281,7 +281,7 @@ public class MeetController {
 
     @DeleteMapping("/noVisit/{id}")
     public ResponseEntity<?> noVisitMeet(@PathVariable("id") Long meetId,
-                                            @CookieValue(value = "jwt", required = false) String jwt) {
+                                         @CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
                     JwtFilter.getBody(jwt)
@@ -301,7 +301,7 @@ public class MeetController {
 
     @PostMapping("/visit/{id}")
     public ResponseEntity<Meet> visitMeet(@PathVariable("id") Long meetId,
-                                         @CookieValue(value = "jwt", required = false) String jwt) {
+                                          @CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
             Long userId = Long.parseLong(
                     JwtFilter.getBody(jwt)
@@ -377,7 +377,7 @@ public class MeetController {
     }
 
     @GetMapping("/futureMeet")
-    public ResponseEntity<List<Meet>> getFutureMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt){
+    public ResponseEntity<List<Meet>> getFutureMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.ADMINISTRATION)) {
             Long administrationId = Long.parseLong(
                     JwtFilter.getBody(jwt)
@@ -396,7 +396,7 @@ public class MeetController {
     }
 
     @GetMapping("/lastMeet")
-    public ResponseEntity<List<Meet>> getLastMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt){
+    public ResponseEntity<List<Meet>> getLastMeetByPlace(@CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.ADMINISTRATION)) {
             Long administrationId = Long.parseLong(
                     JwtFilter.getBody(jwt)

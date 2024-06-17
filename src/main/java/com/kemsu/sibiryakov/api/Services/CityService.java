@@ -17,6 +17,7 @@ import java.util.List;
 public class CityService {
     private final ICityRepositories cityRepositories;
     private final IRegionRepository regionRepository;
+
     @Autowired
     public CityService(ICityRepositories cityRepositories, IRegionRepository regionRepository) {
         this.cityRepositories = cityRepositories;

@@ -4,7 +4,6 @@ import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.CreateAnswerDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
-import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class AnswerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Answer> getById(@PathVariable Long id,
-                                          @CookieValue(value = "jwt",required = false) String jwt) {
+                                          @CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
                 ERole.ORGANIZER, ERole.ADMINISTRATION)) {
             Answer answer = answerService.getById(id);

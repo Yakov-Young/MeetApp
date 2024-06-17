@@ -9,7 +9,7 @@ import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
 import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Entities.UserPart.UserOrganizerStatus;
-import com.kemsu.sibiryakov.api.Repositories.*;
+import com.kemsu.sibiryakov.api.Repositories.IUsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,25 +77,25 @@ public class UserService {
     }
 
     public User createModerator(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-            Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
+        Access existingUser = accessService.getByLogin(user.getAccess().getLogin());
 
-            if (existingUser != null) {
-                return null;
-            }
+        if (existingUser != null) {
+            return null;
+        }
 
-            user.setAccess(accessService.createAccess(
-                    new AccessDTO(
-                            user.getAccess().getLogin(),
-                            user.getAccess().getPassword()
-                    )
-            ));
-            user.setStatus(userOrganizerStatusService.createStatus(
-                    user.getStatus()
-            ));
-            user.setCity(cityService.getById(6L)); // Kemerovo city
-            user.setRole(roleService.getByID(2L)); // Moderator role
+        user.setAccess(accessService.createAccess(
+                new AccessDTO(
+                        user.getAccess().getLogin(),
+                        user.getAccess().getPassword()
+                )
+        ));
+        user.setStatus(userOrganizerStatusService.createStatus(
+                user.getStatus()
+        ));
+        user.setCity(cityService.getById(6L)); // Kemerovo city
+        user.setRole(roleService.getByID(2L)); // Moderator role
 
-            return usersRepository.save(user);
+        return usersRepository.save(user);
     }
 
     public User prepareToRegisterUser(UserRegisterDTO userRegisterDTO) {
@@ -146,7 +146,7 @@ public class UserService {
         List<User> users = this.getAll();
         List<User> bannedUsers = new ArrayList<>();
 
-        for (User u: users) {
+        for (User u : users) {
             if (u.getStatus().getStatus().equals(UserStatus.BANNED)
                     && u.getRole().getName().equals(ERole.USER.getRole())) {
                 bannedUsers.add(u);
@@ -160,7 +160,7 @@ public class UserService {
         List<User> users = this.getAll();
         List<User> activeUsers = new ArrayList<>();
 
-        for (User u: users) {
+        for (User u : users) {
             if (u.getStatus().getStatus().equals(UserStatus.ACTIVE)
                     && u.getRole().getName().equals(ERole.USER.getRole())) {
                 activeUsers.add(u);
@@ -174,7 +174,7 @@ public class UserService {
         List<User> users = this.getAll();
         List<User> warringUsers = new ArrayList<>();
 
-        for (User u: users) {
+        for (User u : users) {
             if (u.getStatus().getStatus().equals(UserStatus.WARING)
                     && u.getRole().getName().equals(ERole.USER.getRole())) {
                 warringUsers.add(u);
@@ -188,7 +188,7 @@ public class UserService {
         List<User> users = this.getAll();
         List<User> deletedUsers = new ArrayList<>();
 
-        for (User u: users) {
+        for (User u : users) {
             if (u.getStatus().getStatus().equals(UserStatus.DELETED)
                     && u.getRole().getName().equals(ERole.USER.getRole())) {
                 deletedUsers.add(u);
@@ -202,7 +202,7 @@ public class UserService {
         List<User> users = this.getAll();
         List<User> moderators = new ArrayList<>();
 
-        for (User u: users) {
+        for (User u : users) {
             if (u.getRole().getName().equals(ERole.MODERATOR.getRole())) {
                 moderators.add(u);
             }

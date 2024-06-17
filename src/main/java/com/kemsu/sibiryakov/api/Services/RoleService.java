@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class RoleService {
     private final IRoleRepository roleRepository;
+
     @Autowired
     public RoleService(IRoleRepository roleRepository) {
         this.roleRepository = roleRepository;

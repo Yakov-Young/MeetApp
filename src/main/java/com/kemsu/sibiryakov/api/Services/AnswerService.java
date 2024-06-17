@@ -2,7 +2,6 @@ package com.kemsu.sibiryakov.api.Services;
 
 import com.kemsu.sibiryakov.api.DTOs.BanDTO;
 import com.kemsu.sibiryakov.api.DTOs.CreateAnswerDTO;
-import com.kemsu.sibiryakov.api.DTOs.CreateQuestionDTO;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Answer;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.ContentStatus;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Question;
@@ -10,7 +9,6 @@ import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Repositories.IAnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 

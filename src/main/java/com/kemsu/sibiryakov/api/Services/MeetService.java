@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Services;
 
-import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.BanDTO;
+import com.kemsu.sibiryakov.api.DTOs.MeetDTO.AgreeMeetDTO;
 import com.kemsu.sibiryakov.api.DTOs.MeetDTO.CreateMeetDTO;
 import com.kemsu.sibiryakov.api.Entities.Category;
 import com.kemsu.sibiryakov.api.Entities.Emuns.TypeStatus;
@@ -150,7 +150,7 @@ public class MeetService {
         List<Meet> meets = this.getAll();
         List<Meet> futureMeets = new ArrayList<>();
 
-        for (Meet m: meets) {
+        for (Meet m : meets) {
             if (LocalDateTime.now().isBefore(m.getDateStart())) {
                 futureMeets.add(m);
             }
@@ -163,7 +163,7 @@ public class MeetService {
         List<Meet> meets = this.getAll();
         List<Meet> lastMeets = new ArrayList<>();
 
-        for (Meet m: meets) {
+        for (Meet m : meets) {
             if (LocalDateTime.now().isAfter(m.getDateStart())) {
                 lastMeets.add(m);
             }
@@ -185,7 +185,7 @@ public class MeetService {
 
         List<Meet> futureMeets = new ArrayList<>();
 
-        for (Meet m: meets) {
+        for (Meet m : meets) {
             if (LocalDateTime.now().isBefore(m.getDateStart())) {
                 futureMeets.add(m);
             }
@@ -199,7 +199,7 @@ public class MeetService {
 
         List<Meet> lastMeets = new ArrayList<>();
 
-        for (Meet m: meets) {
+        for (Meet m : meets) {
             if (LocalDateTime.now().isAfter(m.getDateStart())) {
                 lastMeets.add(m);
             }
@@ -221,12 +221,12 @@ public class MeetService {
 
         List<MeetUser> meetUsers = meet.getMeetUser();
 
-        for (MeetUser m: meetUsers) {
+        for (MeetUser m : meetUsers) {
             User user = userService.getById(m.getUser().getId());
             Meet tempMeet = this.getById(banDTO.getId());
 
             int counter = 0;
-            for (MeetUser mu: meetUserRepository.findByMeet(tempMeet)) {
+            for (MeetUser mu : meetUserRepository.findByMeet(tempMeet)) {
                 if (mu.getTypeAction().equals(TypeStatus.VISIT))
                     counter++;
             }
@@ -237,7 +237,7 @@ public class MeetService {
 
             List<MeetUser> meetUserList = meetUserRepository.findByUserAndMeet(user, tempMeet);
 
-            for (MeetUser mu: meetUserList) {
+            for (MeetUser mu : meetUserList) {
                 if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
                     meetUserRepository.delete(mu);
                 }

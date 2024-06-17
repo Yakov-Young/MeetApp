@@ -1,7 +1,5 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
-import com.kemsu.sibiryakov.api.Entities.UserPart.OrganizerPhoneNumber;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.AccessService;
 import com.kemsu.sibiryakov.api.Services.OrganizerPhoneNumberService;
@@ -34,6 +32,7 @@ public class test {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
     }
+
     @DeleteMapping("/tel/{id}")
     public void delPhone(@PathVariable Long id,
                          @CookieValue(value = "jwt") String jwt) throws Exception {

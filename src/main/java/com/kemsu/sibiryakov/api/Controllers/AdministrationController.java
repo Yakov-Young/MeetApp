@@ -2,7 +2,6 @@ package com.kemsu.sibiryakov.api.Controllers;
 
 
 import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.AdministrationUpdateDTO;
-import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.OrganizerUpdateDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 

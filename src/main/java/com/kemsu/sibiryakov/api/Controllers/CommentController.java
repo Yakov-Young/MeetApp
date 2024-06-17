@@ -1,7 +1,7 @@
 package com.kemsu.sibiryakov.api.Controllers;
 
-import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
 import com.kemsu.sibiryakov.api.DTOs.BanDTO;
+import com.kemsu.sibiryakov.api.DTOs.CreateCommentDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.EContentStatus;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.MeetPart.Comment;
@@ -85,7 +85,7 @@ public class CommentController {
                     JwtFilter.getBody(jwt)
                             .get("id")
                             .toString()
-                );
+            );
 
             Comment comment = commentService.banComment(banDTO, moderId);
 

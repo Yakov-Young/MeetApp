@@ -26,7 +26,7 @@ public class MeetUserService {
         this.meetService = meetService;
     }
 
-    public MeetUser viewMeet(Long meetId,Long userId) {
+    public MeetUser viewMeet(Long meetId, Long userId) {
         MeetUser meetUser = new MeetUser();
 
         meetUser.setUser(userService.getById(userId));
@@ -50,7 +50,7 @@ public class MeetUserService {
 
         List<MeetUser> meetUserList = meetUserRepository.findByUserAndMeet(user, meet);
 
-        for (MeetUser mu: meetUserList) {
+        for (MeetUser mu : meetUserList) {
             if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
                 return null;
             }
@@ -71,7 +71,7 @@ public class MeetUserService {
         Meet meet = meetService.getById(meetId);
 
         int counter = 0;
-        for (MeetUser mu: meetUserRepository.findByMeet(meet)) {
+        for (MeetUser mu : meetUserRepository.findByMeet(meet)) {
             if (mu.getTypeAction().equals(TypeStatus.VISIT))
                 counter++;
         }
@@ -82,7 +82,7 @@ public class MeetUserService {
 
         List<MeetUser> meetUserList = meetUserRepository.findByUserAndMeet(user, meet);
 
-        for (MeetUser mu: meetUserList) {
+        for (MeetUser mu : meetUserList) {
             if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
                 meetUserRepository.delete(mu);
                 return true;
@@ -97,7 +97,7 @@ public class MeetUserService {
         );
 
         List<MeetUser> visitMeet = new ArrayList<>();
-        for (MeetUser mu: meetUsers) {
+        for (MeetUser mu : meetUsers) {
             if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
                 visitMeet.add(mu);
             }
@@ -111,7 +111,7 @@ public class MeetUserService {
 
         List<MeetUser> lastMeets = new ArrayList<>();
 
-        for (MeetUser mu: meetUsers) {
+        for (MeetUser mu : meetUsers) {
             if (LocalDateTime.now().isAfter(mu.getMeet().getDateStart())) {
                 lastMeets.add(mu);
             }
@@ -125,7 +125,7 @@ public class MeetUserService {
 
         List<MeetUser> lastMeets = new ArrayList<>();
 
-        for (MeetUser mu: meetUsers) {
+        for (MeetUser mu : meetUsers) {
             if (LocalDateTime.now().isBefore(mu.getMeet().getDateStart())) {
                 lastMeets.add(mu);
             }

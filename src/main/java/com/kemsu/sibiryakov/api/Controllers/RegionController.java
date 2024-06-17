@@ -19,6 +19,7 @@ import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 @RequestMapping("/api/region")
 public class RegionController {
     private final RegionService regionService;
+
     @Autowired
     public RegionController(RegionService regionService) {
         this.regionService = regionService;

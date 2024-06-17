@@ -1,6 +1,5 @@
 package com.kemsu.sibiryakov.api.Entities.PlacePart;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +14,11 @@ public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name= "name", unique=true, nullable=false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="region_id", nullable=false)
+    @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
     public City(String name, Region region) {

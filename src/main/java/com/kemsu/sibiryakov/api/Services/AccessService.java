@@ -6,6 +6,8 @@ import com.kemsu.sibiryakov.api.Repositories.IAccessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,12 +16,10 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
 @Service
 public class AccessService {
     private final IAccessRepository accessRepository;
+
     @Autowired
     public AccessService(IAccessRepository accessRepository) {
         this.accessRepository = accessRepository;

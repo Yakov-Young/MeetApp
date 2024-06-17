@@ -1,9 +1,8 @@
 package com.kemsu.sibiryakov.api.Services;
 
-import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddOneDTO;
 import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddManyDTO;
+import com.kemsu.sibiryakov.api.DTOs.CategoryDTO.CategoryAddOneDTO;
 import com.kemsu.sibiryakov.api.Entities.Category;
-import com.kemsu.sibiryakov.api.Entities.PlacePart.City;
 import com.kemsu.sibiryakov.api.Repositories.ICategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import java.util.Set;
 @Service
 public class CategoryService {
     private final ICategoriesRepository categoriesRepository;
+
     @Autowired
     public CategoryService(ICategoriesRepository categoriesRepository) {
         this.categoriesRepository = categoriesRepository;
@@ -31,7 +31,7 @@ public class CategoryService {
 
     public Set<Category> getByManyId(List<Long> ids) {
         Set<Category> categories = new HashSet<>();
-        for (Long id: ids) {
+        for (Long id : ids) {
             categories.add(
                     this.getById(id)
             );

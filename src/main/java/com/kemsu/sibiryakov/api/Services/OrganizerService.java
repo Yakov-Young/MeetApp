@@ -3,14 +3,14 @@ package com.kemsu.sibiryakov.api.Services;
 import com.kemsu.sibiryakov.api.DTOs.AccessDTO.AccessDTO;
 import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.OrganizerRegisterDTO;
 import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.OrganizerUpdateDTO;
-import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
 import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.PlacePart.Place;
-import com.kemsu.sibiryakov.api.Entities.UserPart.*;
-import com.kemsu.sibiryakov.api.Repositories.IAccessRepository;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
+import com.kemsu.sibiryakov.api.Entities.UserPart.OrganizerPhoneNumber;
+import com.kemsu.sibiryakov.api.Entities.UserPart.UserOrganizerStatus;
 import com.kemsu.sibiryakov.api.Repositories.IOrganizerRepository;
-import com.kemsu.sibiryakov.api.Repositories.IUserOrganizerStatusesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,12 +45,15 @@ public class OrganizerService {
     public List<Organizer> getAllOrganizer() {
         return organizerRepository.findAll();
     }
+
     public Organizer getById(Long id) {
         return organizerRepository.findById(id).orElse(null);
     }
+
     public Organizer save(Organizer organizer) {
         return organizerRepository.save(organizer);
     }
+
     public Organizer getByAccess(Access access) {
         return organizerRepository.getByAccess(access).orElse(null);
     }
@@ -133,7 +136,7 @@ public class OrganizerService {
 
             List<OrganizerPhoneNumber> number = new ArrayList<>();
 
-            for (String numb: organizerUpdateDTO.getPhones()) {
+            for (String numb : organizerUpdateDTO.getPhones()) {
                 number.add(new OrganizerPhoneNumber(numb, organizer));
             }
 
@@ -148,7 +151,7 @@ public class OrganizerService {
         List<Organizer> organizers = this.getAllOrganizer();
         List<Organizer> bannedOrganizers = new ArrayList<>();
 
-        for (Organizer o: organizers) {
+        for (Organizer o : organizers) {
             if (o.getStatus().getStatus().equals(UserStatus.BANNED)) {
                 bannedOrganizers.add(o);
             }
@@ -161,7 +164,7 @@ public class OrganizerService {
         List<Organizer> organizers = this.getAllOrganizer();
         List<Organizer> activeOrganizers = new ArrayList<>();
 
-        for (Organizer o: organizers) {
+        for (Organizer o : organizers) {
             if (o.getStatus().getStatus().equals(UserStatus.ACTIVE)) {
                 activeOrganizers.add(o);
             }
@@ -174,7 +177,7 @@ public class OrganizerService {
         List<Organizer> organizers = this.getAllOrganizer();
         List<Organizer> warringOrganizers = new ArrayList<>();
 
-        for (Organizer o: organizers) {
+        for (Organizer o : organizers) {
             if (o.getStatus().getStatus().equals(UserStatus.WARING)) {
                 warringOrganizers.add(o);
             }
@@ -187,7 +190,7 @@ public class OrganizerService {
         List<Organizer> organizers = this.getAllOrganizer();
         List<Organizer> deletedOrganizers = new ArrayList<>();
 
-        for (Organizer o: organizers) {
+        for (Organizer o : organizers) {
             if (o.getStatus().getStatus().equals(UserStatus.DELETED)) {
                 deletedOrganizers.add(o);
             }

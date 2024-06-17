@@ -2,10 +2,7 @@ package com.kemsu.sibiryakov.api.Controllers;
 
 import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.OrganizerUpdateDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
-import com.kemsu.sibiryakov.api.Entities.Emuns.Gender;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
-import com.kemsu.sibiryakov.api.Entities.UserPart.OrganizerPhoneNumber;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
 import com.kemsu.sibiryakov.api.Services.OrganizerPhoneNumberService;
 import com.kemsu.sibiryakov.api.Services.OrganizerService;
@@ -17,7 +14,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
@@ -27,6 +23,7 @@ import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 public class OrganizerController {
     private final OrganizerService organizerService;
     private final OrganizerPhoneNumberService organizerPhoneNumberService;
+
     @Autowired
     public OrganizerController(OrganizerService organizerService, OrganizerPhoneNumberService organizerPhoneNumberService) {
         this.organizerService = organizerService;
@@ -153,7 +150,7 @@ public class OrganizerController {
         Organizer organizer = organizerService.updateProfile(organizerId, organizerUpdateDTO);
 
         return organizer != null
-                ? new ResponseEntity<>(organizer,HttpStatusCode.valueOf(200))
+                ? new ResponseEntity<>(organizer, HttpStatusCode.valueOf(200))
                 : new ResponseEntity<>(HttpStatusCode.valueOf(406));
     }
 }

@@ -1,9 +1,7 @@
 package com.kemsu.sibiryakov.api.Entities.MeetPart;
 
 import com.kemsu.sibiryakov.api.Entities.Emuns.EMeetStatus;
-import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
-import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +36,7 @@ public class MeetStatus {
         this.createdAt = LocalDateTime.now();
         return this;
     }
+
     public MeetStatus setAgreement() {
         this.status = EMeetStatus.AGREEMENT;
         this.createdAt = LocalDateTime.now();

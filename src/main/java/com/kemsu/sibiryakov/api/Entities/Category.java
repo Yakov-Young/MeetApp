@@ -27,6 +27,7 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
     private Set<Meet> meets;
+
     public Category(String name) {
         this.name = name;
     }

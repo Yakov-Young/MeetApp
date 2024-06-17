@@ -23,12 +23,15 @@ public class PlaceService {
         this.cityRepositories = cityRepositories;
         this.cityService = cityService;
     }
+
     public List<Place> getAll() {
         return placesRepository.findAll();
     }
+
     public Place getById(Long id) {
         return placesRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
     public Place create(PlaceDTO placeDTO) {
         Place place = new Place(
                 cityService.getById(placeDTO.getCity_id()),
@@ -37,6 +40,7 @@ public class PlaceService {
                 placeDTO.getApartment());
         return placesRepository.save(place);
     }
+
     public Place create(Place aPlace) {
         Place place = new Place(
                 aPlace.getCity(),

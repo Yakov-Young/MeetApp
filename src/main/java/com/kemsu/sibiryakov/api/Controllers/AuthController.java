@@ -7,13 +7,14 @@ import com.kemsu.sibiryakov.api.DTOs.RegisterDTO.UserRegisterDTO;
 import com.kemsu.sibiryakov.api.Entities.Emuns.ERole;
 import com.kemsu.sibiryakov.api.Entities.Emuns.UserStatus;
 import com.kemsu.sibiryakov.api.Entities.Interface.IUser;
-import com.kemsu.sibiryakov.api.Entities.UserPart.*;
-import com.kemsu.sibiryakov.api.JwtFilter.JwtFilter;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
+import com.kemsu.sibiryakov.api.Entities.UserPart.Organizer;
+import com.kemsu.sibiryakov.api.Entities.UserPart.User;
 import com.kemsu.sibiryakov.api.Services.AccessService;
 import com.kemsu.sibiryakov.api.Services.AdministrationService;
 import com.kemsu.sibiryakov.api.Services.OrganizerService;
 import com.kemsu.sibiryakov.api.Services.UserService;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -30,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
 
@@ -45,6 +45,7 @@ public class AuthController {
 
 
     private static final String JWT_KEY = "CGuZtKUBu3JIvXOCwWIyJYSS4cP+TNiDIDdvhr6aqnpQ45y3nw0qC9WY4cJPiHXcKKKlILZhpJI8hX5MTRn9QQ==";
+
     @Autowired
     public AuthController(AccessService accessService, UserService userService,
                           OrganizerService organizerService, AdministrationService administrationService) {
@@ -116,7 +117,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@CookieValue(value = "jwt",required = false) String jwt,
+    public ResponseEntity<?> logout(@CookieValue(value = "jwt", required = false) String jwt,
                                     HttpServletResponse response) {
         if (checkRight(jwt, ERole.USER, ERole.MODERATOR, ERole.ADMINISTRATOR,
                 ERole.ORGANIZER, ERole.ADMINISTRATION)) {
@@ -158,7 +159,7 @@ public class AuthController {
 
     @PostMapping("/registerAdministration")
     private ResponseEntity<Administration> registerAdministration(@RequestBody AdministrationRegisterDTO administrationRegisterDTO,
-                                                                  @CookieValue(value = "jwt",required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+                                                                  @CookieValue(value = "jwt", required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (checkRight(jwt, ERole.ADMINISTRATOR)) {
             Administration administration = administrationService.createAdministration(
                     administrationService.prapareToRegisterAdministration(administrationRegisterDTO)
@@ -174,14 +175,14 @@ public class AuthController {
 
     @PostMapping("/registerModerator")
     private ResponseEntity<User> registerModerator(@RequestBody UserRegisterDTO moderatorRegisterDTO,
-                                                   @CookieValue(value = "jwt",required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+                                                   @CookieValue(value = "jwt", required = false) String jwt) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (checkRight(jwt, ERole.ADMINISTRATOR)) {
             User moderator = userService.createModerator(
                     userService.prepareToRegisterUser(moderatorRegisterDTO)
             );
-        return moderator != null
-                ? new ResponseEntity<>(moderator, HttpStatusCode.valueOf(201))
-                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+            return moderator != null
+                    ? new ResponseEntity<>(moderator, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }

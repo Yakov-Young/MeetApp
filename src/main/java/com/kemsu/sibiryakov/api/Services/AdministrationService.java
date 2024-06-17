@@ -6,7 +6,6 @@ import com.kemsu.sibiryakov.api.DTOs.UpdateDTO.AdministrationUpdateDTO;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Access;
 import com.kemsu.sibiryakov.api.Entities.UserPart.Administration;
 import com.kemsu.sibiryakov.api.Entities.UserPart.AdministrationPhoneNumber;
-import com.kemsu.sibiryakov.api.Entities.UserPart.OrganizerPhoneNumber;
 import com.kemsu.sibiryakov.api.Repositories.IAdministrationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,7 +104,7 @@ public class AdministrationService {
 
             List<AdministrationPhoneNumber> number = new ArrayList<>();
 
-            for (String numb: administrationUpdateDTO.getPhones()) {
+            for (String numb : administrationUpdateDTO.getPhones()) {
                 number.add(new AdministrationPhoneNumber(numb, administration));
             }
 
