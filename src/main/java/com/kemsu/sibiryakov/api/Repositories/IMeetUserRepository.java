@@ -14,4 +14,6 @@ public interface IMeetUserRepository extends JpaRepository<MeetUser, Long> {
     List<MeetUser> findByUserAndMeet(User user, Meet meet);
 
     List<MeetUser> findByMeet(Meet meet);
+
+    List<MeetUser> findByUser(User user);
 }

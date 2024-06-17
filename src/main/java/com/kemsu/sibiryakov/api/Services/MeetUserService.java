@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -88,5 +89,48 @@ public class MeetUserService {
             }
         }
         return false;
+    }
+
+    public List<MeetUser> myMeet(Long userId) {
+        List<MeetUser> meetUsers = meetUserRepository.findByUser(
+                userService.getById(userId)
+        );
+
+        List<MeetUser> visitMeet = new ArrayList<>();
+        for (MeetUser mu: meetUsers) {
+            if (mu.getTypeAction().equals(TypeStatus.VISIT)) {
+                visitMeet.add(mu);
+            }
+        }
+
+        return visitMeet;
+    }
+
+    public List<MeetUser> myLastMeet(Long userId) {
+        List<MeetUser> meetUsers = this.myMeet(userId);
+
+        List<MeetUser> lastMeets = new ArrayList<>();
+
+        for (MeetUser mu: meetUsers) {
+            if (LocalDateTime.now().isAfter(mu.getMeet().getDateStart())) {
+                lastMeets.add(mu);
+            }
+        }
+
+        return lastMeets;
+    }
+
+    public List<MeetUser> myFutureMeet(Long userId) {
+        List<MeetUser> meetUsers = this.myMeet(userId);
+
+        List<MeetUser> lastMeets = new ArrayList<>();
+
+        for (MeetUser mu: meetUsers) {
+            if (LocalDateTime.now().isBefore(mu.getMeet().getDateStart())) {
+                lastMeets.add(mu);
+            }
+        }
+
+        return lastMeets;
     }
 }

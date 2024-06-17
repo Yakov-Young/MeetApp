@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.kemsu.sibiryakov.api.Services.RightsService.checkRight;
@@ -59,21 +60,96 @@ public class MeetController {
         }
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<List<Meet>> getMyMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<MeetUser> meetUser = meetUserService.myMeet(userId);
+
+            List<Meet> meets = new ArrayList<>();
+
+            for (MeetUser m: meetUser) {
+                meets.add(m.getMeet());
+            }
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/my/last")
+    public ResponseEntity<List<Meet>> getMyLastMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<MeetUser> meetUser = meetUserService.myLastMeet(userId);
+
+            List<Meet> meets = new ArrayList<>();
+
+            for (MeetUser m: meetUser) {
+                meets.add(m.getMeet());
+            }
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
+    @GetMapping("/my/future")
+    public ResponseEntity<List<Meet>> getMyFutureMeet(@CookieValue(value = "jwt", required = false) String jwt) {
+        if (checkRight(jwt, ERole.USER)) {
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
+
+            List<MeetUser> meetUser = meetUserService.myFutureMeet(userId);
+
+            List<Meet> meets = new ArrayList<>();
+
+            for (MeetUser m: meetUser) {
+                meets.add(m.getMeet());
+            }
+
+            return !meets.isEmpty()
+                    ? new ResponseEntity<>(meets, HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        } else {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+    }
+
     @PostMapping("/view/{id}")
     public ResponseEntity<Meet> viewMeet(@PathVariable("id") Long meetId,
                                          @CookieValue(value = "jwt", required = false) String jwt) {
         if (checkRight(jwt, ERole.USER)) {
-        Long userId = Long.parseLong(
-                JwtFilter.getBody(jwt)
-                        .get("id")
-                        .toString()
-        );
+            Long userId = Long.parseLong(
+                    JwtFilter.getBody(jwt)
+                            .get("id")
+                            .toString()
+            );
 
-        MeetUser meetUser = meetUserService.viewMeet(meetId, userId);
+            MeetUser meetUser = meetUserService.viewMeet(meetId, userId);
 
-        return meetUser != null
-                ? new ResponseEntity<>(meetUser.getMeet(), HttpStatusCode.valueOf(201))
-                : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+            return meetUser != null
+                    ? new ResponseEntity<>(meetUser.getMeet(), HttpStatusCode.valueOf(201))
+                    : new ResponseEntity<>(HttpStatusCode.valueOf(400));
         } else {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
